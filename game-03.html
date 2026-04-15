@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Neon Arcade Grid | Game 03</title>
+    <meta name="description" content="Game 03 staging page for the Neon Arcade Grid collection." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=Orbitron:wght@500;700;800;900&family=Share+Tech+Mono&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="assets/css/styles.css" />
+    <script defer src="assets/js/main.js"></script>
+    <script defer src="assets/js/cubeescape.js"></script>
+  </head>
+  <body data-page="game-03">
+    <div class="site-shell">
+      <header class="site-header">
+        <div class="container nav-frame">
+          <a class="brand" href="index.html" aria-label="Neon Arcade Grid home">
+            <span class="brand-mark"></span>
+            <span class="brand-copy">
+              <strong>Neon Arcade Grid</strong>
+              <span>boot sector: public arcade</span>
+            </span>
+          </a>
+          <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span class="sr-only">Toggle navigation</span>
+          </button>
+          <nav class="site-nav" id="site-nav" aria-label="Primary">
+            <a href="index.html" data-nav="home">Home</a>
+            <a href="game-01.html" data-nav="game-01">Game 01</a>
+            <a href="game-02.html" data-nav="game-02">Game 02</a>
+            <a href="game-03.html" data-nav="game-03">Game 03</a>
+            <a href="game-04.html" data-nav="game-04">Game 04</a>
+          </nav>
+        </div>
+      </header>
+
+      <main class="inner-page">
+        <section class="page-hero">
+          <div class="container page-hero-grid">
+            <div>
+              <p class="eyebrow accent-cyan">Node 03 // live puzzle vault</p>
+              <h1 class="page-title">Cube Escape</h1>
+              <p class="hero-text">
+                Guide a glowing cube through a trapped grid, shove power blocks onto switches, and unlock the exit before the maze seals you in.
+              </p>
+              <div class="hero-actions">
+                <a class="button button-primary" href="#cube-stage">Jump To Puzzle</a>
+                <a class="button button-outline" href="index.html">Return Home</a>
+              </div>
+            </div>
+            <aside class="panel detail-panel">
+              <p class="card-tag accent-cyan">Puzzle brief</p>
+              <h2>Push blocks. Power plates. Reach the exit.</h2>
+              <p>
+                Use the arrow keys or WASD to move the cube. Pressure plates open the escape gate, and every puzzle can be reset instantly if you trap yourself.
+              </p>
+            </aside>
+          </div>
+        </section>
+
+        <section class="content-section">
+          <div class="container">
+            <div class="game-layout">
+              <article class="panel game-stage cube-panel wide-stage" id="cube-stage">
+                <div class="cube-hud">
+                  <div>
+                    <p class="stage-label">Escape runtime</p>
+                    <p class="snake-status" data-cube-status>Use arrow keys or WASD to move the cube.</p>
+                  </div>
+                  <div class="score-row">
+                    <div class="score-box">
+                      <span>Level</span>
+                      <strong data-cube-level>1</strong>
+                    </div>
+                    <div class="score-box">
+                      <span>Moves</span>
+                      <strong data-cube-moves>0</strong>
+                    </div>
+                  </div>
+                </div>
+                <div class="stage-screen cube-screen">
+                  <canvas
+                    class="cube-canvas"
+                    data-cube-canvas
+                    width="560"
+                    height="560"
+                    aria-label="Cube escape puzzle board"
+                  ></canvas>
+                  <div class="snake-overlay" data-cube-overlay>
+                    <p class="card-tag accent-cyan">Puzzle online</p>
+                    <h2 data-cube-overlay-title>Cube Escape ready</h2>
+                    <p data-cube-overlay-copy>Use arrow keys or WASD to move. Push the blocks onto all pressure plates.</p>
+                    <button class="button button-secondary" type="button" data-cube-action>
+                      Start Puzzle
+                    </button>
+                  </div>
+                </div>
+              </article>
+
+              <article class="panel terminal-panel slim-terminal">
+                <div class="terminal-topbar">
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                </div>
+                <div class="terminal-copy">
+                  <p class="eyebrow">Control schema</p>
+                  <ul class="terminal-list">
+                    <li><span>&gt;</span> Move: Arrow keys or WASD</li>
+                    <li><span>&gt;</span> Push: Walk into a power block</li>
+                    <li><span>&gt;</span> Objective: Activate every pressure plate</li>
+                    <li><span>&gt;</span> Escape: Reach the gate after it unlocks</li>
+                    <li><span>&gt;</span> Recovery: Reset the current puzzle anytime</li>
+                  </ul>
+                </div>
+              </article>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer class="site-footer">
+        <div class="container footer-frame">
+          <p>Neon Arcade Grid // session year <span data-year></span></p>
+          <p>Game node 03 online.</p>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>

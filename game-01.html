@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Neon Arcade Grid | Game 01</title>
+    <meta name="description" content="Game 01 staging page for the Neon Arcade Grid collection." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=Orbitron:wght@500;700;800;900&family=Share+Tech+Mono&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="assets/css/styles.css" />
+    <script defer src="assets/js/main.js"></script>
+    <script defer src="assets/js/snake.js"></script>
+  </head>
+  <body data-page="game-01">
+    <div class="site-shell">
+      <header class="site-header">
+        <div class="container nav-frame">
+          <a class="brand" href="index.html" aria-label="Neon Arcade Grid home">
+            <span class="brand-mark"></span>
+            <span class="brand-copy">
+              <strong>Neon Arcade Grid</strong>
+              <span>boot sector: public arcade</span>
+            </span>
+          </a>
+          <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span class="sr-only">Toggle navigation</span>
+          </button>
+          <nav class="site-nav" id="site-nav" aria-label="Primary">
+            <a href="index.html" data-nav="home">Home</a>
+            <a href="game-01.html" data-nav="game-01">Game 01</a>
+            <a href="game-02.html" data-nav="game-02">Game 02</a>
+            <a href="game-03.html" data-nav="game-03">Game 03</a>
+            <a href="game-04.html" data-nav="game-04">Game 04</a>
+          </nav>
+        </div>
+      </header>
+
+      <main class="inner-page">
+        <section class="page-hero">
+          <div class="container page-hero-grid">
+            <div>
+              <p class="eyebrow">Node 01 // live arcade program</p>
+              <h1 class="page-title">Snake.exe</h1>
+              <p class="hero-text">
+                A local browser-based Snake game rendered entirely with JavaScript, wrapped in the same neon terminal styling as the rest of the arcade.
+              </p>
+              <div class="hero-actions">
+                <a class="button button-primary" href="#snake-stage">Jump To Game</a>
+                <a class="button button-outline" href="index.html">Return Home</a>
+              </div>
+            </div>
+            <aside class="panel detail-panel">
+              <p class="card-tag accent-cyan">Terminal brief</p>
+              <h2>Eat apples. Grow longer. Don&apos;t crash.</h2>
+              <p>
+                Use the arrow keys or WASD to steer. Every apple increases your score, and once you collide with a wall or your own body you can restart instantly.
+              </p>
+            </aside>
+          </div>
+        </section>
+
+        <section class="content-section">
+          <div class="container game-layout">
+            <article class="panel game-stage snake-panel" id="snake-stage">
+              <div class="snake-hud">
+                <div>
+                  <p class="stage-label">Snake runtime</p>
+                  <p class="snake-status" data-snake-status>Press any arrow key to begin</p>
+                </div>
+                <div class="snake-meta">
+                  <div class="mode-switcher" role="group" aria-label="Snake difficulty">
+                    <button class="button button-outline mode-button is-active" type="button" data-snake-mode="normal" aria-pressed="true">
+                      Normal
+                    </button>
+                    <button class="button button-outline mode-button" type="button" data-snake-mode="hard" aria-pressed="false">
+                      Hard
+                    </button>
+                  </div>
+                  <div class="score-box" aria-live="polite">
+                    <span>Score</span>
+                    <strong data-snake-score>0</strong>
+                  </div>
+                </div>
+              </div>
+              <div class="stage-screen snake-screen">
+                <canvas
+                  class="snake-canvas"
+                  data-snake-canvas
+                  width="480"
+                  height="480"
+                  aria-label="Snake game board"
+                ></canvas>
+                <div class="snake-overlay" data-snake-overlay>
+                  <p class="card-tag accent-pink">Run terminated</p>
+                  <h2 data-snake-overlay-title>Snake.exe offline</h2>
+                  <p data-snake-overlay-copy>
+                    Press any arrow key to start.
+                  </p>
+                  <button class="button button-secondary is-visually-hidden" type="button" data-snake-restart>
+                    Start Run
+                  </button>
+                </div>
+              </div>
+            </article>
+            <article class="panel terminal-panel slim-terminal">
+              <div class="terminal-topbar">
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+              <div class="terminal-copy">
+                <p class="eyebrow">Control schema</p>
+                <ul class="terminal-list">
+                  <li><span>&gt;</span> Move: Arrow keys or WASD</li>
+                  <li><span>&gt;</span> Objective: Collect neon apples</li>
+                  <li><span>&gt;</span> Failure state: Wall or self collision</li>
+                  <li><span>&gt;</span> Recovery: Retry button after death</li>
+                  <li><span>&gt;</span> Hard mode: Rocks, faster speed, hunting eagle</li>
+                </ul>
+              </div>
+            </article>
+          </div>
+        </section>
+      </main>
+
+      <footer class="site-footer">
+        <div class="container footer-frame">
+          <p>Neon Arcade Grid // session year <span data-year></span></p>
+          <p>Game node 01 scaffolded.</p>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>

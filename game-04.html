@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Neon Arcade Grid | Game 04</title>
+    <meta
+      name="description"
+      content="Game 04 is a gacha combat prototype where you roll gear, then fight monsters and bosses."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=Orbitron:wght@500;700;800;900&family=Share+Tech+Mono&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="assets/css/styles.css" />
+    <script defer src="assets/js/main.js"></script>
+    <script defer src="assets/js/gacharush.js"></script>
+  </head>
+  <body data-page="game-04">
+    <div class="site-shell">
+      <header class="site-header">
+        <div class="container nav-frame">
+          <a class="brand" href="index.html" aria-label="Neon Arcade Grid home">
+            <span class="brand-mark"></span>
+            <span class="brand-copy">
+              <strong>Neon Arcade Grid</strong>
+              <span>boot sector: public arcade</span>
+            </span>
+          </a>
+          <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span class="sr-only">Toggle navigation</span>
+          </button>
+          <nav class="site-nav" id="site-nav" aria-label="Primary">
+            <a href="index.html" data-nav="home">Home</a>
+            <a href="game-01.html" data-nav="game-01">Game 01</a>
+            <a href="game-02.html" data-nav="game-02">Game 02</a>
+            <a href="game-03.html" data-nav="game-03">Game 03</a>
+            <a href="game-04.html" data-nav="game-04">Game 04</a>
+          </nav>
+        </div>
+      </header>
+
+      <main class="inner-page">
+        <section class="landscape-warning" aria-live="polite">
+          <div class="container">
+            <div class="panel landscape-warning-panel">
+              <p class="card-tag accent-pink">Rotate device</p>
+              <h2>Relic Rush is built for horizontal play.</h2>
+              <p>Turn your screen sideways for the full arena view and better combat controls.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="page-hero">
+          <div class="container page-hero-grid">
+            <div>
+              <p class="eyebrow accent-pink">Node 04 // live gacha combat</p>
+              <h1 class="page-title">Relic Rush</h1>
+              <p class="hero-text">
+                Roll for weapons, utilities, and modules, then throw your build into escalating monster waves until the boss cracks or you do.
+              </p>
+              <div class="hero-actions">
+                <a class="button button-secondary" href="#relic-stage">Jump To Run</a>
+                <a class="button button-outline" href="index.html">Return Home</a>
+              </div>
+            </div>
+            <aside class="panel detail-panel">
+              <p class="card-tag accent-pink">Run brief</p>
+              <h2>Draft first. Fight after. Boss every fifth wave.</h2>
+              <p>
+                Spend roll credits on a weapon, utility, and passive module, then enter combat. Each wave pays out new rolls and every fifth wave is a boss.
+              </p>
+            </aside>
+          </div>
+        </section>
+
+        <section class="content-section">
+          <div class="container game-layout alt-layout relic-layout">
+            <article class="panel terminal-panel slim-terminal">
+              <div class="terminal-topbar">
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+              <div class="terminal-copy">
+                <p class="eyebrow">Control schema</p>
+                <ul class="terminal-list">
+                  <li><span>&gt;</span> Roll to draft weapons, utilities, and modules</li>
+                  <li><span>&gt;</span> Start the run when your build feels ready</li>
+                  <li><span>&gt;</span> Move on the arena graph with arrow keys or WASD</li>
+                  <li><span>&gt;</span> Use utility abilities during combat windows</li>
+                  <li><span>&gt;</span> Beat bosses on wave 5, 10, 15, and beyond</li>
+                </ul>
+              </div>
+            </article>
+
+            <article class="panel game-stage relic-panel" id="relic-stage">
+              <div class="relic-hud">
+                <div>
+                  <p class="stage-label">Run director</p>
+                  <p class="snake-status" data-relic-status>Roll your starter kit, then begin the run.</p>
+                </div>
+                <div class="score-row">
+                  <div class="score-box">
+                    <span>Wave</span>
+                    <strong data-relic-wave>0</strong>
+                  </div>
+                  <div class="score-box">
+                      <span>Rolls</span>
+                      <strong data-relic-rolls>6</strong>
+                  </div>
+                  <div class="score-box">
+                    <span>Bosses</span>
+                    <strong data-relic-bosses>0</strong>
+                  </div>
+                  <div class="score-box">
+                    <span>Level</span>
+                    <strong data-relic-level>1</strong>
+                  </div>
+                  <div class="score-box">
+                    <span>XP</span>
+                    <strong data-relic-xp>0 / 40</strong>
+                  </div>
+                </div>
+              </div>
+
+              <div class="relic-grid">
+                <section class="panel relic-arena-panel">
+                  <div class="arena-heading">
+                    <p class="card-tag accent-cyan">Arena graph</p>
+                    <p class="arena-hint">Move with `WASD` or arrow keys. Your weapon auto-fires at the closest threat in range. Use utility with `Enter` or `Space`.</p>
+                  </div>
+                  <div class="stage-screen relic-screen">
+                    <div class="relic-live-strip relic-live-overlay">
+                      <div class="combat-bars relic-bars">
+                        <div class="combat-bar">
+                          <span>Player</span>
+                          <div class="bar-shell"><div class="bar-fill player-fill" data-player-bar></div></div>
+                          <strong data-player-hp>120 / 120</strong>
+                        </div>
+                        <div class="combat-bar">
+                          <span>Enemy</span>
+                          <div class="bar-shell"><div class="bar-fill enemy-fill" data-enemy-bar></div></div>
+                          <strong data-enemy-hp>0 / 0</strong>
+                        </div>
+                      </div>
+                      <div class="combat-actions relic-top-actions">
+                        <button class="button button-primary" type="button" data-relic-start>Start Run</button>
+                        <button class="button button-secondary" type="button" data-relic-utility-use>Use Utility</button>
+                        <button class="button button-outline" type="button" data-relic-reset>Reset Build</button>
+                      </div>
+                    </div>
+                    <canvas
+                      class="relic-canvas"
+                      data-relic-canvas
+                      width="768"
+                      height="432"
+                      aria-label="Relic Rush arena graph"
+                    ></canvas>
+                  </div>
+                </section>
+
+                <section class="relic-sidebar">
+                  <section class="panel relic-subpanel relic-loadout-panel">
+                    <p class="card-tag">Loadout</p>
+                    <div class="roll-actions relic-roll-actions">
+                      <button class="button button-outline" type="button" data-roll-type="weapon">Roll Weapon</button>
+                      <button class="button button-outline" type="button" data-roll-type="utility">Roll Utility</button>
+                      <button class="button button-outline" type="button" data-roll-type="module">Roll Module</button>
+                    </div>
+                    <div class="odds-panel">
+                      <p class="card-tag accent-pink">Roll Rates</p>
+                      <div class="odds-grid" data-relic-rates></div>
+                    </div>
+                    <div class="loadout-list">
+                      <div class="loadout-card">
+                        <span>Weapon</span>
+                        <strong data-relic-weapon>Rust Blaster</strong>
+                        <p data-relic-weapon-copy>Reliable starter firearm with flat damage.</p>
+                      </div>
+                      <div class="loadout-card">
+                        <span>Utility</span>
+                        <strong data-relic-utility>Pulse Medkit</strong>
+                        <p data-relic-utility-copy>Heals you on command during a fight.</p>
+                      </div>
+                      <div class="loadout-card">
+                        <span>Module</span>
+                        <strong data-relic-module>Static Core</strong>
+                        <p data-relic-module-copy>Basic passive that keeps your damage stable.</p>
+                      </div>
+                    </div>
+                  </section>
+
+                  <section class="panel relic-subpanel relic-combat-panel">
+                    <p class="card-tag accent-cyan">Combat feed</p>
+                    <div class="combat-stage">
+                      <div class="combat-actors">
+                        <div class="actor-card player-actor">
+                          <p>Operator Cube</p>
+                          <strong data-player-power>ATK 12</strong>
+                          <span data-player-utility-state>Utility ready // 1 charge</span>
+                        </div>
+                        <div class="actor-card enemy-actor">
+                          <p data-enemy-name>No target</p>
+                          <strong data-enemy-type>Waiting</strong>
+                          <span data-enemy-intent>No hostile signal</span>
+                        </div>
+                      </div>
+                      <div class="combat-log" data-relic-log aria-live="polite"></div>
+                    </div>
+                  </section>
+                </section>
+              </div>
+            </article>
+          </div>
+        </section>
+      </main>
+
+      <footer class="site-footer">
+        <div class="container footer-frame">
+          <p>Neon Arcade Grid // session year <span data-year></span></p>
+          <p>Game node 04 online.</p>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>

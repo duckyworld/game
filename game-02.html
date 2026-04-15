@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Neon Arcade Grid | Game 02</title>
+    <meta name="description" content="Game 02 staging page for the Neon Arcade Grid collection." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=Orbitron:wght@500;700;800;900&family=Share+Tech+Mono&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="assets/css/styles.css" />
+    <script defer src="assets/js/main.js"></script>
+    <script defer src="assets/js/pingpong.js"></script>
+  </head>
+  <body data-page="game-02">
+    <div class="site-shell">
+      <header class="site-header">
+        <div class="container nav-frame">
+          <a class="brand" href="index.html" aria-label="Neon Arcade Grid home">
+            <span class="brand-mark"></span>
+            <span class="brand-copy">
+              <strong>Neon Arcade Grid</strong>
+              <span>boot sector: public arcade</span>
+            </span>
+          </a>
+          <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span class="sr-only">Toggle navigation</span>
+          </button>
+          <nav class="site-nav" id="site-nav" aria-label="Primary">
+            <a href="index.html" data-nav="home">Home</a>
+            <a href="game-01.html" data-nav="game-01">Game 01</a>
+            <a href="game-02.html" data-nav="game-02">Game 02</a>
+            <a href="game-03.html" data-nav="game-03">Game 03</a>
+            <a href="game-04.html" data-nav="game-04">Game 04</a>
+          </nav>
+        </div>
+      </header>
+
+      <main class="inner-page">
+        <section class="page-hero">
+          <div class="container page-hero-grid">
+            <div>
+              <p class="eyebrow accent-pink">Node 02 // live sports sim</p>
+              <h1 class="page-title">Ping Protocol</h1>
+              <p class="hero-text">
+                A top-down neon ping pong duel. You face the AI from above the table, aim with the mouse, and click to swing through each return.
+              </p>
+              <div class="hero-actions">
+                <a class="button button-secondary" href="#ping-stage">Jump To Match</a>
+                <a class="button button-outline" href="index.html">Return Home</a>
+              </div>
+            </div>
+            <aside class="panel detail-panel">
+              <p class="card-tag accent-pink">Match brief</p>
+              <h2>Face the table from a true top-down view</h2>
+              <p>
+                Move your paddle with the mouse across your half of the table, click to swing, and outplay an AI opponent with three difficulty modes.
+              </p>
+            </aside>
+          </div>
+        </section>
+
+        <section class="content-section">
+          <div class="container game-layout alt-layout">
+            <article class="panel terminal-panel slim-terminal">
+              <div class="terminal-topbar">
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+              <div class="terminal-copy">
+                <p class="eyebrow">Control schema</p>
+                <ul class="terminal-list">
+                  <li><span>&gt;</span> View: top-down over the full table</li>
+                  <li><span>&gt;</span> Aim: move your mouse over the canvas</li>
+                  <li><span>&gt;</span> Swing: click when the ball reaches you</li>
+                  <li><span>&gt;</span> Modes: easy, normal, hard AI</li>
+                  <li><span>&gt;</span> Objective: first to 7 points wins</li>
+                </ul>
+              </div>
+            </article>
+            <article class="panel game-stage ping-panel" id="ping-stage">
+              <div class="ping-hud">
+                <div>
+                  <p class="stage-label">Top-down match</p>
+                  <p class="snake-status" data-ping-status>Move your mouse onto the table, then click to serve.</p>
+                </div>
+                <div class="ping-meta">
+                  <div class="mode-switcher" role="group" aria-label="Ping pong difficulty">
+                    <button class="button button-outline mode-button is-active" type="button" data-ping-mode="easy" aria-pressed="true">Easy</button>
+                    <button class="button button-outline mode-button" type="button" data-ping-mode="normal" aria-pressed="false">Normal</button>
+                    <button class="button button-outline mode-button" type="button" data-ping-mode="hard" aria-pressed="false">Hard</button>
+                  </div>
+                  <div class="score-row">
+                    <div class="score-box" aria-live="polite">
+                      <span>You</span>
+                      <strong data-ping-player-score>0</strong>
+                    </div>
+                    <div class="score-box ping-ai-score" aria-live="polite">
+                      <span>AI</span>
+                      <strong data-ping-ai-score>0</strong>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="stage-screen ping-screen">
+                <canvas
+                  class="ping-canvas"
+                  data-ping-canvas
+                  width="520"
+                  height="760"
+                  aria-label="Top-down ping pong table"
+                ></canvas>
+                <div class="snake-overlay" data-ping-overlay>
+                  <p class="card-tag accent-pink">Match ready</p>
+                  <h2 data-ping-overlay-title>Ping Protocol online</h2>
+                  <p data-ping-overlay-copy>Move your mouse to aim the paddle, then click to serve.</p>
+                  <button class="button button-secondary" type="button" data-ping-restart>
+                    Start Match
+                  </button>
+                </div>
+              </div>
+            </article>
+          </div>
+        </section>
+      </main>
+
+      <footer class="site-footer">
+        <div class="container footer-frame">
+          <p>Neon Arcade Grid // session year <span data-year></span></p>
+          <p>Game node 02 online.</p>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>
