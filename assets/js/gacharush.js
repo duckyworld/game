@@ -76,32 +76,34 @@ if (relicPage) {
       Exotic: 1.8,
       Divine: 0.5,
       Godlike: 0.08,
+      Nathan: 0.00001,
     };
 
-    const rarityOrder = ["Common", "Uncommon", "Rare", "Epic", "Legendary", "Mythic", "Exotic", "Divine", "Godlike"];
+    const rarityOrder = ["Common", "Uncommon", "Rare", "Epic", "Legendary", "Mythic", "Exotic", "Divine", "Godlike", "Nathan"];
 
     const weapons = [
-      { name: "Rust Blaster", rarity: "Common", attack: 12, speed: 0.9, crit: 0.08, range: 138, style: "gun", copy: "Reliable starter firearm with flat damage." },
-      { name: "Ash Repeater", rarity: "Common", attack: 10, speed: 1.45, crit: 0.05, range: 128, style: "gun", copy: "Fast attack cycle that chips monsters down." },
-      { name: "Scrap Pike", rarity: "Uncommon", attack: 14, speed: 1.02, crit: 0.09, range: 112, style: "blade", copy: "A rough spear rig that stabs through rushing mobs." },
-      { name: "Ion Slicer", rarity: "Uncommon", attack: 13, speed: 1.32, crit: 0.1, range: 92, style: "blade", copy: "Fast mono-edge that flickers through short sweep arcs." },
-      { name: "Volt Lance", rarity: "Rare", attack: 17, speed: 1.05, crit: 0.16, range: 156, style: "gun", copy: "Long pulse strikes that crit harder the longer the fight runs." },
-      { name: "Orbit Saber", rarity: "Rare", attack: 15, speed: 1.18, crit: 0.12, range: 82, style: "blade", copy: "Balanced close-range blade loop with steady output." },
-      { name: "Prism Carbine", rarity: "Rare", attack: 18, speed: 1.12, crit: 0.14, range: 174, style: "gun", copy: "A cleaner rifle roll that keeps pressure from deep range." },
-      { name: "Null Cannon", rarity: "Epic", attack: 24, speed: 0.72, crit: 0.22, range: 164, style: "gun", copy: "Heavy impact bursts built for bosses." },
-      { name: "Rift Talon", rarity: "Epic", attack: 20, speed: 1.28, crit: 0.19, range: 88, style: "blade", copy: "Close-range arc blade that carves wide neon sweeps." },
-      { name: "Storm Halberd", rarity: "Epic", attack: 22, speed: 1.0, crit: 0.17, range: 108, style: "blade", copy: "Sweeping pole-arm that clips multiple melee lanes." },
-      { name: "Sunwire Bow", rarity: "Legendary", attack: 28, speed: 1.0, crit: 0.24, range: 224, style: "gun", copy: "Long-range radiant shots that punish backline enemies." },
-      { name: "Nebula Drifter", rarity: "Legendary", attack: 26, speed: 1.26, crit: 0.21, range: 196, style: "gun", copy: "High-tier rifle that deletes ranged enemies before they settle." },
-      { name: "Event Horizon", rarity: "Mythic", attack: 36, speed: 0.82, crit: 0.3, range: 208, style: "gun", copy: "Forbidden relic cannon that hits like a boss weapon." },
-      { name: "Abyss Fang", rarity: "Mythic", attack: 32, speed: 1.22, crit: 0.27, range: 96, style: "blade", copy: "A myth-tier saber that leaves a brutal violet sweep trail." },
-      { name: "Void Psalm", rarity: "Mythic", attack: 38, speed: 1.08, crit: 0.28, range: 188, style: "gun", copy: "Myth-tier burst relic that chains brutal mid-range volleys." },
-      { name: "Night Crown", rarity: "Mythic", attack: 35, speed: 1.16, crit: 0.31, range: 104, style: "blade", copy: "A cursed monarch blade with wider, nastier sweep pressure." },
-      { name: "Starrender Rail", rarity: "Exotic", attack: 42, speed: 0.92, crit: 0.34, range: 252, style: "gun", copy: "An illegal rail relic tuned to erase sniper lines." },
-      { name: "Seraph Arc", rarity: "Divine", attack: 52, speed: 1.04, crit: 0.4, range: 238, style: "blade", copy: "Celestial edge that paints giant light sweeps across the graph." },
-      { name: "Halo Rupture", rarity: "Divine", attack: 56, speed: 0.96, crit: 0.43, range: 244, style: "gun", copy: "Divine fracture cannon built to split entire lanes open." },
-      { name: "Godsplitter", rarity: "Godlike", attack: 68, speed: 1.42, crit: 0.48, range: 122, style: "blade", copy: "Godlike execution saber with enormous sweep damage and radiant reach." },
-      { name: "Genesis Coil", rarity: "Godlike", attack: 74, speed: 1.25, crit: 0.5, range: 272, style: "gun", copy: "Godlike coil engine that erases elites before they can set up." },
+      { name: "Rust Blaster", rarity: "Common", attack: 12, speed: 0.9, crit: 0.08, range: 138, style: "gun", attackType: "shot", copy: "Reliable starter firearm with flat damage." },
+      { name: "Ash Repeater", rarity: "Common", attack: 10, speed: 1.45, crit: 0.05, range: 128, style: "gun", attackType: "burst", copy: "Fast attack cycle that chips monsters down." },
+      { name: "Scrap Pike", rarity: "Uncommon", attack: 14, speed: 1.02, crit: 0.09, range: 112, style: "blade", attackType: "stab", copy: "A rough spear rig that stabs through rushing mobs." },
+      { name: "Ion Slicer", rarity: "Uncommon", attack: 13, speed: 1.32, crit: 0.1, range: 92, style: "blade", attackType: "slash", copy: "Fast mono-edge that flickers through short sweep arcs." },
+      { name: "Volt Lance", rarity: "Rare", attack: 17, speed: 1.05, crit: 0.16, range: 156, style: "gun", attackType: "beam", copy: "Long pulse strikes that crit harder the longer the fight runs." },
+      { name: "Orbit Saber", rarity: "Rare", attack: 15, speed: 1.18, crit: 0.12, range: 82, style: "blade", attackType: "slash", copy: "Balanced close-range blade loop with steady output." },
+      { name: "Prism Carbine", rarity: "Rare", attack: 18, speed: 1.12, crit: 0.14, range: 174, style: "gun", attackType: "shot", copy: "A cleaner rifle roll that keeps pressure from deep range." },
+      { name: "Null Cannon", rarity: "Epic", attack: 24, speed: 0.72, crit: 0.22, range: 164, style: "gun", attackType: "blast", copy: "Heavy impact bursts built for bosses." },
+      { name: "Rift Talon", rarity: "Epic", attack: 20, speed: 1.28, crit: 0.19, range: 88, style: "blade", attackType: "slash", copy: "Close-range arc blade that carves wide neon sweeps." },
+      { name: "Storm Halberd", rarity: "Epic", attack: 22, speed: 1.0, crit: 0.17, range: 108, style: "blade", attackType: "cleave", copy: "Sweeping pole-arm that clips multiple melee lanes." },
+      { name: "Sunwire Bow", rarity: "Legendary", attack: 28, speed: 1.0, crit: 0.24, range: 224, style: "gun", attackType: "pierce", copy: "Long-range radiant shots that punish backline enemies." },
+      { name: "Nebula Drifter", rarity: "Legendary", attack: 26, speed: 1.26, crit: 0.21, range: 196, style: "gun", attackType: "burst", copy: "High-tier rifle that deletes ranged enemies before they settle." },
+      { name: "Event Horizon", rarity: "Mythic", attack: 36, speed: 0.82, crit: 0.3, range: 208, style: "gun", attackType: "blast", copy: "Forbidden relic cannon that hits like a boss weapon." },
+      { name: "Abyss Fang", rarity: "Mythic", attack: 32, speed: 1.22, crit: 0.27, range: 96, style: "blade", attackType: "stab", copy: "A myth-tier saber that leaves a brutal violet sweep trail." },
+      { name: "Void Psalm", rarity: "Mythic", attack: 38, speed: 1.08, crit: 0.28, range: 188, style: "gun", attackType: "beam", copy: "Myth-tier burst relic that chains brutal mid-range volleys." },
+      { name: "Night Crown", rarity: "Mythic", attack: 35, speed: 1.16, crit: 0.31, range: 104, style: "blade", attackType: "cleave", copy: "A cursed monarch blade with wider, nastier sweep pressure." },
+      { name: "Starrender Rail", rarity: "Exotic", attack: 42, speed: 0.92, crit: 0.34, range: 252, style: "gun", attackType: "pierce", copy: "An illegal rail relic tuned to erase sniper lines." },
+      { name: "Seraph Arc", rarity: "Divine", attack: 52, speed: 1.04, crit: 0.4, range: 238, style: "blade", attackType: "cleave", copy: "Celestial edge that paints giant light sweeps across the graph." },
+      { name: "Halo Rupture", rarity: "Divine", attack: 56, speed: 0.96, crit: 0.43, range: 244, style: "gun", attackType: "blast", copy: "Divine fracture cannon built to split entire lanes open." },
+      { name: "Godsplitter", rarity: "Godlike", attack: 68, speed: 1.42, crit: 0.48, range: 122, style: "blade", attackType: "cleave", copy: "Godlike execution saber with enormous sweep damage and radiant reach." },
+      { name: "Genesis Coil", rarity: "Godlike", attack: 74, speed: 1.25, crit: 0.5, range: 272, style: "gun", attackType: "beam", copy: "Godlike coil engine that erases elites before they can set up." },
+      { name: "NATHAN GOAT", rarity: "Nathan", attack: 160, speed: 2.35, crit: 0.72, range: 340, style: "gun", attackType: "beam", copy: "One-in-ten-million forbidden weapon. Absurd damage, speed, crit, range, and beam pressure." },
     ];
 
     const utilities = [
@@ -120,6 +122,7 @@ if (relicPage) {
       { name: "Solar Baptism", rarity: "Divine", type: "heal", power: 74, charges: 2, copy: "Divine recovery surge that can drag a near-dead run back online." },
       { name: "Throne Override", rarity: "Godlike", type: "boost", power: 2.05, charges: 3, copy: "Godlike overclock that turns every weapon into a run-ending engine." },
       { name: "Judgment Halo", rarity: "Godlike", type: "shield", power: 58, charges: 3, copy: "Godlike barrier stack built to survive boss volleys and brute hits." },
+      { name: "NATHAN OVERRIDE", rarity: "Nathan", type: "boost", power: 2.8, charges: 4, copy: "Nathan-tier admin utility. Huge damage overclock with extra charges." },
     ];
 
     const modules = [
@@ -134,11 +137,20 @@ if (relicPage) {
       { name: "Eclipse Relay", rarity: "Exotic", type: "speed", value: 1.42, copy: "Exotic relay that turns all weapons into terrifying loop machines." },
       { name: "Throne Kernel", rarity: "Divine", type: "flat", value: 14, copy: "Divine compute core that overloads every strike with raw force." },
       { name: "Origin Kernel", rarity: "Godlike", type: "flat", value: 20, copy: "Godlike compute shard that floods every strike with impossible output." },
+      { name: "NATHAN CORE", rarity: "Nathan", type: "speed", value: 1.9, copy: "Nathan-tier module. Massive attack loop acceleration for impossible runs." },
     ];
 
     const starterWeapon = weapons[0];
     const starterUtility = utilities[0];
     const starterModule = modules[0];
+    const godlikeWeapon = weapons.find((item) => item.name === "Genesis Coil") || weapons[weapons.length - 1];
+    const godlikeUtility = utilities.find((item) => item.name === "Throne Override") || utilities[utilities.length - 1];
+    const godlikeModule = modules.find((item) => item.name === "Origin Kernel") || modules[modules.length - 1];
+    const nathanWeapon = weapons.find((item) => item.name === "NATHAN GOAT") || godlikeWeapon;
+    const nathanUtility = utilities.find((item) => item.name === "NATHAN OVERRIDE") || godlikeUtility;
+    const nathanModule = modules.find((item) => item.name === "NATHAN CORE") || godlikeModule;
+    const adminCode = ["arrowup", "arrowup", "arrowdown", "arrowdown", "arrowleft", "arrowright", "arrowleft"];
+    let adminCodeIndex = 0;
 
     const arena = {
       width: canvas.width,
@@ -157,6 +169,7 @@ if (relicPage) {
       level: 1,
       xp: 0,
       xpToNext: 40,
+      adminMode: false,
       inRun: false,
       animationFrame: 0,
       lastTime: 0,
@@ -186,10 +199,18 @@ if (relicPage) {
       targetPulse: 0,
       swingTimer: 0,
       swingAngle: 0,
+      attackFx: [],
     };
 
     const rarityLabel = (item) => `${item.name} // ${item.rarity}`;
     const rarityClassName = (item) => `rarity-${item.rarity.toLowerCase()}`;
+    const rarityRank = (rarity) => rarityOrder.indexOf(rarity);
+    const isAboveExotic = (item) => rarityRank(item.rarity) > rarityRank("Exotic");
+    const formatRollRate = (rarity, totalWeight) =>
+      rarity === "Nathan"
+        ? "0.00001%"
+        : `${((rarityWeights[rarity] / totalWeight) * 100).toFixed(rarity === "Godlike" ? 2 : 1)}%`;
+
     const randomItem = (pool) => {
       const totalWeight = pool.reduce((sum, item) => sum + (rarityWeights[item.rarity] || 1), 0);
       let roll = Math.random() * totalWeight;
@@ -204,6 +225,20 @@ if (relicPage) {
       return pool[pool.length - 1];
     };
 
+    const confirmRollSwap = (currentItem, nextItem, slotName) => {
+      if (!isAboveExotic(currentItem) && !isAboveExotic(nextItem)) {
+        return true;
+      }
+
+      if (currentItem.name === nextItem.name && currentItem.rarity === nextItem.rarity) {
+        return true;
+      }
+
+      return window.confirm(
+        `Confirm ${slotName} swap?\n\nCurrent: ${rarityLabel(currentItem)}\nNew roll: ${rarityLabel(nextItem)}\n\nOK = equip new roll\nCancel = keep current item`
+      );
+    };
+
     const renderRates = () => {
       const totalWeight = rarityOrder.reduce((sum, rarity) => sum + rarityWeights[rarity], 0);
       ratesOutput.innerHTML = "";
@@ -214,7 +249,7 @@ if (relicPage) {
         const value = document.createElement("strong");
         row.className = "odds-row";
         label.textContent = rarity;
-        value.textContent = `${((rarityWeights[rarity] / totalWeight) * 100).toFixed(rarity === "Godlike" ? 2 : 1)}%`;
+        value.textContent = formatRollRate(rarity, totalWeight);
         value.className = `rarity-${rarity.toLowerCase()}`;
         row.append(label, value);
         ratesOutput.append(row);
@@ -256,11 +291,11 @@ if (relicPage) {
 
     const computeStats = () => {
       const maxHp = 120 + (state.module.type === "maxHp" ? state.module.value : 0) + (state.level - 1) * 18;
-      const attackBase = state.weapon.attack + (state.module.type === "flat" ? state.module.value : 0);
-      const attackRate = state.weapon.speed * (state.module.type === "speed" ? state.module.value : 1);
+      const attackBase = (state.weapon.attack + (state.module.type === "flat" ? state.module.value : 0)) * (state.adminMode ? 1.75 : 1);
+      const attackRate = state.weapon.speed * (state.module.type === "speed" ? state.module.value : 1) * (state.adminMode ? 1.65 : 1);
       return {
         maxHp,
-        attackBase,
+        attackBase: Math.round(attackBase),
         attackRate,
         range: state.weapon.range,
       };
@@ -269,7 +304,8 @@ if (relicPage) {
     const createEnemy = (kind, laneOffset, wave) => {
       if (kind === "boss") {
         const bossTier = Math.max(1, Math.floor(wave / 5));
-        const hp = 165 + wave * 18 + bossTier * 28;
+        const isTopBoss = bossTier >= 5;
+        const hp = 165 + wave * 18 + bossTier * 28 + (isTopBoss ? 420 : 0);
         return {
           kind: "Boss",
           name: `${bossTier >= 4 ? "Overlord" : bossTier >= 2 ? "Apex Prime" : "Apex"} ${bossTier}`,
@@ -277,18 +313,21 @@ if (relicPage) {
           y: canvas.height * 0.5,
           hp,
           maxHp: hp,
-          damage: 13 + Math.floor(wave * 1.35) + bossTier * 2,
-          speed: 58 + wave + bossTier * 2,
-          radius: 28 + Math.min(6, bossTier),
+          damage: 13 + Math.floor(wave * 1.35) + bossTier * 2 + (isTopBoss ? 12 : 0),
+          speed: 58 + wave + bossTier * 2 + (isTopBoss ? 18 : 0),
+          radius: 28 + Math.min(6, bossTier) + (isTopBoss ? 5 : 0),
           attackTimer: 0,
-          attackCadence: Math.max(0.9, 1.35 - bossTier * 0.035),
-          range: 174 + bossTier * 5,
-          projectileSpeed: 220 + bossTier * 16,
-          summonTimer: Math.max(4, 6.4 - bossTier * 0.18),
-          veinTimer: Math.max(3, 4.4 - bossTier * 0.1),
-          radialTimer: Math.max(3.4, 6.2 - bossTier * 0.16),
-          chargeTimer: Math.max(4.6, 7.8 - bossTier * 0.18),
+          attackCadence: Math.max(0.72, 1.35 - bossTier * 0.035 - (isTopBoss ? 0.16 : 0)),
+          range: 174 + bossTier * 5 + (isTopBoss ? 30 : 0),
+          projectileSpeed: 220 + bossTier * 16 + (isTopBoss ? 85 : 0),
+          damageReduction: 0.5,
+          dodgeChance: 0.2,
+          summonTimer: Math.max(2.6, 6.4 - bossTier * 0.18 - (isTopBoss ? 1.15 : 0)),
+          veinTimer: Math.max(2.1, 4.4 - bossTier * 0.1 - (isTopBoss ? 0.85 : 0)),
+          radialTimer: Math.max(2.2, 6.2 - bossTier * 0.16 - (isTopBoss ? 1.25 : 0)),
+          chargeTimer: Math.max(3, 7.8 - bossTier * 0.18 - (isTopBoss ? 1.35 : 0)),
           bossTier,
+          isTopBoss,
         };
       }
 
@@ -529,6 +568,7 @@ if (relicPage) {
           });
       state.projectiles = [];
       state.veins = [];
+      state.attackFx = [];
       state.utilityCharges = state.utility.charges;
       state.player.attackCooldown = 0;
       state.droneTimer = 0;
@@ -584,6 +624,7 @@ if (relicPage) {
       state.level = 1;
       state.xp = 0;
       state.xpToNext = 40;
+      state.adminMode = false;
       state.weapon = starterWeapon;
       state.utility = starterUtility;
       state.module = starterModule;
@@ -606,11 +647,26 @@ if (relicPage) {
       state.veins = [];
       state.utilityCharges = 1;
       state.droneTimer = 0;
+      state.attackFx = [];
       state.keys.clear();
       state.swingTimer = 0;
       log.innerHTML = "";
       setStatus("Roll your starter kit, then begin the run.");
       logLine("Draft credits restored.");
+      refreshUi();
+      draw();
+    };
+
+    const activateAdminCode = () => {
+      state.adminMode = true;
+      state.weapon = nathanWeapon;
+      state.utility = nathanUtility;
+      state.module = nathanModule;
+      state.utilityCharges = Math.max(state.utilityCharges, nathanUtility.charges);
+      state.player.hp = state.player.maxHp;
+      state.player.boost = Math.max(state.player.boost, 8);
+      setStatus("Admin protocol unlocked // Nathan-tier loadout online");
+      logLine("SECRET CODE ACCEPTED // Nathan-tier gear, damage, and attack speed boosted.");
       refreshUi();
       draw();
     };
@@ -750,6 +806,99 @@ if (relicPage) {
       });
     };
 
+    const addAttackFx = (fx) => {
+      state.attackFx.push({
+        life: 0.16,
+        maxLife: 0.16,
+        ...fx,
+      });
+    };
+
+    const getArcGap = (from, target, angle) =>
+      Math.abs(Math.atan2(Math.sin(angleTo(from, target) - angle), Math.cos(angleTo(from, target) - angle)));
+
+    const dealWeaponDamage = (enemy, amount) => {
+      if (enemy.kind === "Boss" && Math.random() < (enemy.dodgeChance || 0)) {
+        logLine(`${enemy.name} dodged the strike.`);
+        return;
+      }
+
+      enemy.hp -= amount * (1 - (enemy.damageReduction || 0));
+    };
+
+    const applyWeaponDamage = (primaryEnemy, damage, strikeAngle, stats) => {
+      const type = state.weapon.attackType || (state.weapon.style === "blade" ? "slash" : "shot");
+
+      if (type === "slash") {
+        state.swingTimer = 0.18;
+        state.swingAngle = strikeAngle;
+        addAttackFx({ type: "slash", x: state.player.x, y: state.player.y, angle: strikeAngle, range: stats.range * 0.7, color: "#00d4ff" });
+        state.enemies.forEach((enemy) => {
+          if (distance(state.player, enemy) <= stats.range + 18 && getArcGap(state.player, enemy, strikeAngle) <= 0.8) {
+            dealWeaponDamage(enemy, damage);
+          }
+        });
+        return;
+      }
+
+      if (type === "cleave") {
+        state.swingTimer = 0.22;
+        state.swingAngle = strikeAngle;
+        addAttackFx({ type: "cleave", x: state.player.x, y: state.player.y, angle: strikeAngle, range: stats.range * 0.82, color: state.weapon.rarity === "Godlike" ? "#fff1a1" : "#ff00ff" });
+        state.enemies.forEach((enemy) => {
+          if (distance(state.player, enemy) <= stats.range + 34 && getArcGap(state.player, enemy, strikeAngle) <= 1.18) {
+            dealWeaponDamage(enemy, damage * 0.86);
+          }
+        });
+        return;
+      }
+
+      if (type === "stab") {
+        addAttackFx({ type: "stab", x: state.player.x, y: state.player.y, angle: strikeAngle, range: stats.range, color: "#ffffff" });
+        state.enemies.forEach((enemy) => {
+          if (distance(state.player, enemy) <= stats.range + enemy.radius && getArcGap(state.player, enemy, strikeAngle) <= 0.24) {
+            dealWeaponDamage(enemy, damage * 1.25);
+          }
+        });
+        return;
+      }
+
+      if (type === "burst") {
+        addAttackFx({ type: "burst", x: state.player.x, y: state.player.y, angle: strikeAngle, range: stats.range, color: "#00ff88" });
+        const targets = [...state.enemies]
+          .filter((enemy) => distance(state.player, enemy) <= stats.range)
+          .sort((a, b) => distance(state.player, a) - distance(state.player, b))
+          .slice(0, 3);
+        targets.forEach((enemy, index) => {
+          dealWeaponDamage(enemy, damage * (index === 0 ? 0.65 : 0.42));
+        });
+        return;
+      }
+
+      if (type === "pierce" || type === "beam") {
+        addAttackFx({ type, x: state.player.x, y: state.player.y, angle: strikeAngle, range: stats.range, color: state.weapon.rarity === "Nathan" ? "#4b0082" : type === "beam" ? "#fff1a1" : "#00d4ff" });
+        state.enemies.forEach((enemy) => {
+          if (distance(state.player, enemy) <= stats.range + enemy.radius && getArcGap(state.player, enemy, strikeAngle) <= (type === "beam" ? 0.12 : 0.18)) {
+            dealWeaponDamage(enemy, damage * (type === "beam" ? 1.08 : 0.95));
+          }
+        });
+        return;
+      }
+
+      if (type === "blast") {
+        addAttackFx({ type: "blast", x: primaryEnemy.x, y: primaryEnemy.y, range: 54, color: "#ff00ff" });
+        state.enemies.forEach((enemy) => {
+          if (distance(primaryEnemy, enemy) <= 58 + enemy.radius) {
+            dealWeaponDamage(enemy, damage * (enemy === primaryEnemy ? 1 : 0.62));
+          }
+        });
+        return;
+      }
+
+      addAttackFx({ type: "shot", x: state.player.x, y: state.player.y, angle: strikeAngle, range: distance(state.player, primaryEnemy), color: "#00ff88" });
+      dealWeaponDamage(primaryEnemy, damage);
+    };
+
     const summonBossMinion = (boss) => {
       const summonPool = boss.bossTier >= 4
         ? ["mob", "runner", "ranger", "poison", "brute", "weaver", "warden"]
@@ -769,15 +918,15 @@ if (relicPage) {
       boss.chargeTimer -= delta;
 
       if (boss.radialTimer <= 0) {
-        const shots = Math.min(10, 5 + boss.bossTier);
+        const shots = boss.isTopBoss ? 16 : Math.min(10, 5 + boss.bossTier);
         for (let index = 0; index < shots; index += 1) {
           const theta = (Math.PI * 2 / shots) * index + state.targetPulse * 0.18;
           fireProjectile(boss, theta, {
-            damage: Math.round(boss.damage * 0.55),
+            damage: Math.round(boss.damage * (boss.isTopBoss ? 0.72 : 0.55)),
             speed: boss.projectileSpeed,
-            life: 2.2,
-            radius: 5 + Math.min(2, boss.bossTier),
-            color: boss.bossTier >= 3 ? "#ff00ff" : "#ff88d0",
+            life: boss.isTopBoss ? 2.6 : 2.2,
+            radius: boss.isTopBoss ? 8 : 5 + Math.min(2, boss.bossTier),
+            color: boss.isTopBoss ? "#2a002f" : boss.bossTier >= 3 ? "#ff00ff" : "#ff88d0",
           });
         }
         boss.radialTimer = Math.max(3.2, 6.2 - boss.bossTier * 0.18);
@@ -786,16 +935,16 @@ if (relicPage) {
 
       if (boss.chargeTimer <= 0) {
         const theta = angleTo(boss, state.player);
-        boss.x = clamp(boss.x + Math.cos(theta) * (62 + boss.bossTier * 8), arena.inset + boss.radius, arena.width - arena.inset - boss.radius);
-        boss.y = clamp(boss.y + Math.sin(theta) * (62 + boss.bossTier * 8), arena.inset + boss.radius, arena.height - arena.inset - boss.radius);
-        spawnVein(boss.x, boss.y, 28 + boss.bossTier * 2, 4.6);
+        boss.x = clamp(boss.x + Math.cos(theta) * (62 + boss.bossTier * 8 + (boss.isTopBoss ? 50 : 0)), arena.inset + boss.radius, arena.width - arena.inset - boss.radius);
+        boss.y = clamp(boss.y + Math.sin(theta) * (62 + boss.bossTier * 8 + (boss.isTopBoss ? 50 : 0)), arena.inset + boss.radius, arena.height - arena.inset - boss.radius);
+        spawnVein(boss.x, boss.y, 28 + boss.bossTier * 2 + (boss.isTopBoss ? 14 : 0), boss.isTopBoss ? 6.8 : 4.6);
         if (distance(boss, state.player) <= boss.radius + 36) {
           state.player.hp -= Math.round(boss.damage * 0.75);
           logLine(`${boss.name} charge crushed you.`);
         } else {
           logLine(`${boss.name} charged through the grid.`);
         }
-        boss.chargeTimer = Math.max(4.4, 7.8 - boss.bossTier * 0.18);
+        boss.chargeTimer = boss.isTopBoss ? 3.1 : Math.max(4.4, 7.8 - boss.bossTier * 0.18);
       }
     };
 
@@ -875,6 +1024,9 @@ if (relicPage) {
       if (state.swingTimer > 0) {
         state.swingTimer -= delta;
       }
+      state.attackFx = state.attackFx
+        .map((fx) => ({ ...fx, life: fx.life - delta }))
+        .filter((fx) => fx.life > 0);
       if (state.droneTimer > 0) {
         state.droneTimer -= delta;
       }
@@ -991,20 +1143,7 @@ if (relicPage) {
           damage *= state.module.value;
         }
 
-        if (state.weapon.style === "blade") {
-          state.swingTimer = 0.18;
-          state.swingAngle = strikeAngle;
-          state.enemies.forEach((enemy) => {
-            if (distance(state.player, enemy) <= stats.range + 18) {
-              const arcGap = Math.abs(Math.atan2(Math.sin(angleTo(state.player, enemy) - strikeAngle), Math.cos(angleTo(state.player, enemy) - strikeAngle)));
-              if (arcGap <= 0.8) {
-                enemy.hp -= damage;
-              }
-            }
-          });
-        } else {
-          primaryEnemy.hp -= damage;
-        }
+        applyWeaponDamage(primaryEnemy, damage, strikeAngle, stats);
 
         state.player.attackCooldown = 1 / stats.attackRate;
       }
@@ -1192,6 +1331,46 @@ if (relicPage) {
         ctx.shadowBlur = 0;
       });
 
+      state.attackFx.forEach((fx) => {
+        const alpha = clamp(fx.life / fx.maxLife, 0, 1);
+        ctx.save();
+        ctx.globalAlpha = alpha;
+        ctx.strokeStyle = fx.color;
+        ctx.fillStyle = fx.color;
+        ctx.shadowBlur = 18;
+        ctx.shadowColor = fx.color;
+
+        if (fx.type === "slash" || fx.type === "cleave") {
+          ctx.lineWidth = fx.type === "cleave" ? 11 : 7;
+          ctx.beginPath();
+          ctx.arc(fx.x, fx.y, fx.range, fx.angle - (fx.type === "cleave" ? 1.12 : 0.65), fx.angle + (fx.type === "cleave" ? 1.12 : 0.65));
+          ctx.stroke();
+        } else if (fx.type === "stab") {
+          ctx.lineWidth = 6;
+          ctx.beginPath();
+          ctx.moveTo(fx.x, fx.y);
+          ctx.lineTo(fx.x + Math.cos(fx.angle) * fx.range, fx.y + Math.sin(fx.angle) * fx.range);
+          ctx.stroke();
+          ctx.beginPath();
+          ctx.arc(fx.x + Math.cos(fx.angle) * fx.range, fx.y + Math.sin(fx.angle) * fx.range, 7, 0, Math.PI * 2);
+          ctx.fill();
+        } else if (fx.type === "beam" || fx.type === "pierce" || fx.type === "shot" || fx.type === "burst") {
+          const lineWidth = fx.type === "beam" ? 8 : fx.type === "burst" ? 4 : 3;
+          ctx.lineWidth = lineWidth;
+          ctx.beginPath();
+          ctx.moveTo(fx.x, fx.y);
+          ctx.lineTo(fx.x + Math.cos(fx.angle) * fx.range, fx.y + Math.sin(fx.angle) * fx.range);
+          ctx.stroke();
+        } else if (fx.type === "blast") {
+          ctx.lineWidth = 5;
+          ctx.beginPath();
+          ctx.arc(fx.x, fx.y, fx.range * (1 + (1 - alpha) * 0.25), 0, Math.PI * 2);
+          ctx.stroke();
+        }
+
+        ctx.restore();
+      });
+
       if (state.droneTimer > 0) {
         ctx.beginPath();
         ctx.fillStyle = "#00d4ff";
@@ -1279,14 +1458,29 @@ if (relicPage) {
         const type = button.dataset.rollType;
 
         if (type === "weapon") {
-          state.weapon = randomItem(weapons);
-          logLine(`Rolled weapon: ${state.weapon.name}.`);
+          const nextWeapon = randomItem(weapons);
+          if (confirmRollSwap(state.weapon, nextWeapon, "weapon")) {
+            state.weapon = nextWeapon;
+            logLine(`Rolled weapon: ${state.weapon.name}.`);
+          } else {
+            logLine(`Kept weapon: ${state.weapon.name}. Rolled ${nextWeapon.name} was declined.`);
+          }
         } else if (type === "utility") {
-          state.utility = randomItem(utilities);
-          logLine(`Rolled utility: ${state.utility.name}.`);
+          const nextUtility = randomItem(utilities);
+          if (confirmRollSwap(state.utility, nextUtility, "utility")) {
+            state.utility = nextUtility;
+            logLine(`Rolled utility: ${state.utility.name}.`);
+          } else {
+            logLine(`Kept utility: ${state.utility.name}. Rolled ${nextUtility.name} was declined.`);
+          }
         } else {
-          state.module = randomItem(modules);
-          logLine(`Rolled module: ${state.module.name}.`);
+          const nextModule = randomItem(modules);
+          if (confirmRollSwap(state.module, nextModule, "module")) {
+            state.module = nextModule;
+            logLine(`Rolled module: ${state.module.name}.`);
+          } else {
+            logLine(`Kept module: ${state.module.name}. Rolled ${nextModule.name} was declined.`);
+          }
         }
 
         refreshUi();
@@ -1320,6 +1514,17 @@ if (relicPage) {
       const key = event.key.toLowerCase();
       if (["arrowup", "arrowdown", "arrowleft", "arrowright", "w", "a", "s", "d", " ", "enter"].includes(key)) {
         event.preventDefault();
+      }
+      if (["arrowup", "arrowdown", "arrowleft", "arrowright"].includes(key)) {
+        if (key === adminCode[adminCodeIndex]) {
+          adminCodeIndex += 1;
+          if (adminCodeIndex === adminCode.length) {
+            adminCodeIndex = 0;
+            activateAdminCode();
+          }
+        } else {
+          adminCodeIndex = key === adminCode[0] ? 1 : 0;
+        }
       }
       if (["arrowup", "arrowdown", "arrowleft", "arrowright", "w", "a", "s", "d"].includes(key)) {
         state.keys.add(key);
