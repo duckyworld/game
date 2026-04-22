@@ -100,8 +100,8 @@ if (relicPage) {
       { name: "Starrender Rail", rarity: "Exotic", attack: 42, speed: 0.92, crit: 0.34, range: 252, style: "gun", copy: "An illegal rail relic tuned to erase sniper lines." },
       { name: "Seraph Arc", rarity: "Divine", attack: 52, speed: 1.04, crit: 0.4, range: 238, style: "blade", copy: "Celestial edge that paints giant light sweeps across the graph." },
       { name: "Halo Rupture", rarity: "Divine", attack: 56, speed: 0.96, crit: 0.43, range: 244, style: "gun", copy: "Divine fracture cannon built to split entire lanes open." },
-      { name: "Godsplitter", rarity: "Godlike", attack: 68, speed: 1.08, crit: 0.48, range: 122, style: "blade", copy: "Godlike execution saber with enormous sweep damage and radiant reach." },
-      { name: "Genesis Coil", rarity: "Godlike", attack: 74, speed: 0.88, crit: 0.5, range: 272, style: "gun", copy: "Godlike coil engine that erases elites before they can set up." },
+      { name: "Godsplitter", rarity: "Godlike", attack: 68, speed: 1.42, crit: 0.48, range: 122, style: "blade", copy: "Godlike execution saber with enormous sweep damage and radiant reach." },
+      { name: "Genesis Coil", rarity: "Godlike", attack: 74, speed: 1.25, crit: 0.5, range: 272, style: "gun", copy: "Godlike coil engine that erases elites before they can set up." },
     ];
 
     const utilities = [
@@ -136,6 +136,10 @@ if (relicPage) {
       { name: "Origin Kernel", rarity: "Godlike", type: "flat", value: 20, copy: "Godlike compute shard that floods every strike with impossible output." },
     ];
 
+    const starterWeapon = weapons[0];
+    const starterUtility = utilities[0];
+    const starterModule = modules[0];
+
     const arena = {
       width: canvas.width,
       height: canvas.height,
@@ -156,9 +160,9 @@ if (relicPage) {
       inRun: false,
       animationFrame: 0,
       lastTime: 0,
-      weapon: weapons[0],
-      utility: utilities[0],
-      module: modules[0],
+      weapon: starterWeapon,
+      utility: starterUtility,
+      module: starterModule,
       player: {
         x: canvas.width * 0.22,
         y: canvas.height * 0.5,
@@ -170,6 +174,7 @@ if (relicPage) {
         attackCooldown: 0,
         poisonTimer: 0,
         poisonTickTimer: 0,
+        slowTimer: 0,
       },
       enemies: [],
       projectiles: [],
@@ -228,6 +233,26 @@ if (relicPage) {
     const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
     const distance = (a, b) => Math.hypot(a.x - b.x, a.y - b.y);
     const angleTo = (from, to) => Math.atan2(to.y - from.y, to.x - from.x);
+    const getEnemyColor = (enemy) => {
+      if (enemy.kind === "Boss") {
+        const bossColors = ["#ff00ff", "#c200ff", "#8d00d4", "#5c008f", "#300047"];
+        return bossColors[Math.min(bossColors.length - 1, Math.max(0, (enemy.bossTier || 1) - 1))];
+      }
+
+      return enemy.kind === "Runner"
+        ? "#00ff88"
+        : enemy.kind === "Ranger"
+          ? "#ffd166"
+          : enemy.kind === "Venom"
+            ? "#7dff7a"
+            : enemy.kind === "Brute"
+              ? "#ff8a42"
+              : enemy.kind === "Weaver"
+                ? "#c6ff4d"
+                : enemy.kind === "Warden"
+                  ? "#00d4ff"
+                  : "#ff4d88";
+    };
 
     const computeStats = () => {
       const maxHp = 120 + (state.module.type === "maxHp" ? state.module.value : 0) + (state.level - 1) * 18;
@@ -243,22 +268,27 @@ if (relicPage) {
 
     const createEnemy = (kind, laneOffset, wave) => {
       if (kind === "boss") {
+        const bossTier = Math.max(1, Math.floor(wave / 5));
+        const hp = 165 + wave * 18 + bossTier * 28;
         return {
           kind: "Boss",
-          name: `Apex ${wave / 5}`,
+          name: `${bossTier >= 4 ? "Overlord" : bossTier >= 2 ? "Apex Prime" : "Apex"} ${bossTier}`,
           x: canvas.width * 0.8,
           y: canvas.height * 0.5,
-          hp: 180 + wave * 22,
-          maxHp: 180 + wave * 22,
-          damage: 16 + wave * 2,
-          speed: 68 + wave * 2,
-          radius: 28,
+          hp,
+          maxHp: hp,
+          damage: 13 + Math.floor(wave * 1.35) + bossTier * 2,
+          speed: 58 + wave + bossTier * 2,
+          radius: 28 + Math.min(6, bossTier),
           attackTimer: 0,
-          attackCadence: 1.25,
-          range: 170,
-          projectileSpeed: 0,
-          summonTimer: 4.8,
-          veinTimer: 3.2,
+          attackCadence: Math.max(0.9, 1.35 - bossTier * 0.035),
+          range: 174 + bossTier * 5,
+          projectileSpeed: 220 + bossTier * 16,
+          summonTimer: Math.max(4, 6.4 - bossTier * 0.18),
+          veinTimer: Math.max(3, 4.4 - bossTier * 0.1),
+          radialTimer: Math.max(3.4, 6.2 - bossTier * 0.16),
+          chargeTimer: Math.max(4.6, 7.8 - bossTier * 0.18),
+          bossTier,
         };
       }
 
@@ -318,6 +348,65 @@ if (relicPage) {
           attackCadence: 1.8,
           range: 46,
           projectileSpeed: 0,
+          veinTimer: 0,
+        };
+      }
+
+      if (kind === "runner") {
+        return {
+          kind: "Runner",
+          name: `Wire Runner ${laneOffset + 1}`,
+          x: canvas.width * 0.78 + (laneOffset % 2) * 32,
+          y: canvas.height * (0.2 + laneOffset * 0.17),
+          hp: 22 + wave * 5,
+          maxHp: 22 + wave * 5,
+          damage: 3 + Math.floor(wave * 0.45),
+          speed: 112 + wave * 4,
+          radius: 13,
+          attackTimer: 0,
+          attackCadence: 1.05,
+          range: 35,
+          projectileSpeed: 0,
+          veinTimer: 0,
+        };
+      }
+
+      if (kind === "weaver") {
+        return {
+          kind: "Weaver",
+          name: `Vein Weaver ${laneOffset + 1}`,
+          x: canvas.width * 0.72 + (laneOffset % 2) * 36,
+          y: canvas.height * (0.18 + laneOffset * 0.16),
+          hp: 46 + wave * 10,
+          maxHp: 46 + wave * 10,
+          damage: 7 + wave,
+          speed: 42 + wave * 1.5,
+          radius: 17,
+          attackTimer: 0,
+          attackCadence: 1.65,
+          range: 170,
+          preferredRange: 122,
+          projectileSpeed: 220 + wave * 5,
+          veinTimer: 1.9,
+        };
+      }
+
+      if (kind === "warden") {
+        return {
+          kind: "Warden",
+          name: `Arc Warden ${laneOffset + 1}`,
+          x: canvas.width * 0.77 + (laneOffset % 2) * 24,
+          y: canvas.height * (0.2 + laneOffset * 0.17),
+          hp: 58 + wave * 12,
+          maxHp: 58 + wave * 12,
+          damage: 9 + wave,
+          speed: 38 + wave * 1.4,
+          radius: 19,
+          attackTimer: 0,
+          attackCadence: 2.1,
+          range: 196,
+          preferredRange: 152,
+          projectileSpeed: 210 + wave * 4,
           veinTimer: 0,
         };
       }
@@ -384,7 +473,7 @@ if (relicPage) {
       utilityCopy.textContent = state.utility.copy;
       moduleCopy.textContent = state.module.copy;
       playerPower.textContent = `ATK ${stats.attackBase} // SPD ${stats.attackRate.toFixed(2)} // RNG ${Math.round(stats.range)}`;
-      playerUtilityState.textContent = `${state.utility.name} // ${state.utilityCharges} charge${state.utilityCharges === 1 ? "" : "s"}${state.player.shield > 0 ? ` // shield ${Math.ceil(state.player.shield)}` : ""}${state.player.poisonTimer > 0 ? " // poisoned" : ""}`;
+      playerUtilityState.textContent = `${state.utility.name} // ${state.utilityCharges} charge${state.utilityCharges === 1 ? "" : "s"}${state.player.shield > 0 ? ` // shield ${Math.ceil(state.player.shield)}` : ""}${state.player.poisonTimer > 0 ? " // poisoned" : ""}${state.player.slowTimer > 0 ? " // slowed" : ""}`;
       playerHp.textContent = `${Math.max(0, Math.ceil(state.player.hp))} / ${state.player.maxHp}`;
       playerBar.style.width = `${clamp((state.player.hp / state.player.maxHp) * 100, 0, 100)}%`;
 
@@ -418,6 +507,15 @@ if (relicPage) {
       state.enemies = isBossWave
         ? [createEnemy("boss", 0, state.wave)]
         : Array.from({ length: Math.min(6, 2 + Math.floor(state.wave / 2)) }, (_, index) => {
+            if (state.wave >= 2 && index === 0 && state.wave % 2 === 0) {
+              return createEnemy("runner", index, state.wave);
+            }
+            if (state.wave >= 9 && index === 3) {
+              return createEnemy("warden", index, state.wave);
+            }
+            if (state.wave >= 7 && index === 2) {
+              return createEnemy("weaver", index, state.wave);
+            }
             if (state.wave >= 6 && index === 0) {
               return createEnemy("brute", index, state.wave);
             }
@@ -458,7 +556,9 @@ if (relicPage) {
         state.bossesCleared += 1;
       }
       state.rolls += reward;
+      state.player.hp = Math.min(state.player.maxHp, state.player.hp + 50);
       logLine(`Wave ${state.wave} cleared. +${reward} roll credits.`);
+      logLine("Round-end recovery restored 50 HP.");
       setStatus(bossWave ? "Boss down // reroll and prep the next bracket" : "Wave cleared // reroll or press Start");
       state.enemies = [];
       state.projectiles = [];
@@ -484,9 +584,9 @@ if (relicPage) {
       state.level = 1;
       state.xp = 0;
       state.xpToNext = 40;
-      state.weapon = weapons[0];
-      state.utility = utilities[0];
-      state.module = modules[0];
+      state.weapon = starterWeapon;
+      state.utility = starterUtility;
+      state.module = starterModule;
       state.player = {
         x: canvas.width * 0.22,
         y: canvas.height * 0.5,
@@ -498,6 +598,7 @@ if (relicPage) {
         attackCooldown: 0,
         poisonTimer: 0,
         poisonTickTimer: 0,
+        slowTimer: 0,
       };
       state.enemies = [];
       state.projectiles = [];
@@ -633,6 +734,71 @@ if (relicPage) {
       });
     };
 
+    const fireProjectile = (enemy, theta, options = {}) => {
+      state.projectiles.push({
+        x: enemy.x,
+        y: enemy.y,
+        vx: Math.cos(theta) * (options.speed || enemy.projectileSpeed || 240),
+        vy: Math.sin(theta) * (options.speed || enemy.projectileSpeed || 240),
+        damage: options.damage || enemy.damage,
+        poison: options.poison || 0,
+        slow: options.slow || 0,
+        from: "enemy",
+        life: options.life || 1.6,
+        radius: options.radius || 5,
+        color: options.color || "#ff88d0",
+      });
+    };
+
+    const summonBossMinion = (boss) => {
+      const summonPool = boss.bossTier >= 4
+        ? ["mob", "runner", "ranger", "poison", "brute", "weaver", "warden"]
+        : boss.bossTier >= 2
+          ? ["mob", "runner", "ranger", "poison", "weaver"]
+          : ["mob", "runner", "ranger"];
+      const kind = summonPool[Math.floor(Math.random() * summonPool.length)];
+      const minion = createEnemy(kind, state.enemies.length % 5, state.wave);
+      minion.x = clamp(boss.x + (Math.random() - 0.5) * 90, arena.inset + minion.radius, arena.width - arena.inset - minion.radius);
+      minion.y = clamp(boss.y + (Math.random() - 0.5) * 150, arena.inset + minion.radius, arena.height - arena.inset - minion.radius);
+      state.enemies.push(minion);
+      logLine(`${boss.name} summoned ${minion.name}.`);
+    };
+
+    const useBossSpecials = (boss, delta) => {
+      boss.radialTimer -= delta;
+      boss.chargeTimer -= delta;
+
+      if (boss.radialTimer <= 0) {
+        const shots = Math.min(10, 5 + boss.bossTier);
+        for (let index = 0; index < shots; index += 1) {
+          const theta = (Math.PI * 2 / shots) * index + state.targetPulse * 0.18;
+          fireProjectile(boss, theta, {
+            damage: Math.round(boss.damage * 0.55),
+            speed: boss.projectileSpeed,
+            life: 2.2,
+            radius: 5 + Math.min(2, boss.bossTier),
+            color: boss.bossTier >= 3 ? "#ff00ff" : "#ff88d0",
+          });
+        }
+        boss.radialTimer = Math.max(3.2, 6.2 - boss.bossTier * 0.18);
+        logLine(`${boss.name} fired a radial barrage.`);
+      }
+
+      if (boss.chargeTimer <= 0) {
+        const theta = angleTo(boss, state.player);
+        boss.x = clamp(boss.x + Math.cos(theta) * (62 + boss.bossTier * 8), arena.inset + boss.radius, arena.width - arena.inset - boss.radius);
+        boss.y = clamp(boss.y + Math.sin(theta) * (62 + boss.bossTier * 8), arena.inset + boss.radius, arena.height - arena.inset - boss.radius);
+        spawnVein(boss.x, boss.y, 28 + boss.bossTier * 2, 4.6);
+        if (distance(boss, state.player) <= boss.radius + 36) {
+          state.player.hp -= Math.round(boss.damage * 0.75);
+          logLine(`${boss.name} charge crushed you.`);
+        } else {
+          logLine(`${boss.name} charged through the grid.`);
+        }
+        boss.chargeTimer = Math.max(4.4, 7.8 - boss.bossTier * 0.18);
+      }
+    };
+
     const updateVeins = (delta) => {
       state.veins = state.veins.filter((vein) => {
         vein.duration -= delta;
@@ -675,8 +841,9 @@ if (relicPage) {
       }
 
       const magnitude = Math.hypot(moveX, moveY) || 1;
-      state.player.x += moveX / magnitude * state.player.speed * delta;
-      state.player.y += moveY / magnitude * state.player.speed * delta;
+      const speedMultiplier = state.player.slowTimer > 0 ? 0.62 : 1;
+      state.player.x += moveX / magnitude * state.player.speed * speedMultiplier * delta;
+      state.player.y += moveY / magnitude * state.player.speed * speedMultiplier * delta;
       state.player.x = clamp(state.player.x, arena.inset, arena.width - arena.inset);
       state.player.y = clamp(state.player.y, arena.inset, arena.height - arena.inset);
     };
@@ -690,6 +857,9 @@ if (relicPage) {
 
       if (state.player.boost > 0) {
         state.player.boost -= delta;
+      }
+      if (state.player.slowTimer > 0) {
+        state.player.slowTimer -= delta;
       }
       if (state.player.poisonTimer > 0) {
         state.player.poisonTimer -= delta;
@@ -716,7 +886,7 @@ if (relicPage) {
         const dy = state.player.y - enemy.y;
         const gap = Math.hypot(dx, dy) || 1;
 
-        if (enemy.kind === "Ranger" || enemy.kind === "Venom") {
+        if (enemy.kind === "Ranger" || enemy.kind === "Venom" || enemy.kind === "Weaver" || enemy.kind === "Warden") {
           if (gap < enemy.preferredRange - 12) {
             enemy.x -= dx / gap * enemy.speed * delta;
             enemy.y -= dy / gap * enemy.speed * delta;
@@ -738,16 +908,22 @@ if (relicPage) {
           enemy.summonTimer -= delta;
         }
 
+        if (enemy.kind === "Boss") {
+          useBossSpecials(enemy, delta);
+        }
+
         if (enemy.kind === "Boss" && enemy.summonTimer <= 0 && state.enemies.length < 7) {
-          enemy.summonTimer = 5.8;
-          state.enemies.push(createEnemy("mob", state.enemies.length % 4, state.wave));
-          logLine(`${enemy.name} summoned a fresh mob.`);
+          enemy.summonTimer = Math.max(2.8, 5.8 - enemy.bossTier * 0.28);
+          const summonCount = enemy.bossTier >= 5 ? 2 : 1;
+          for (let index = 0; index < summonCount && state.enemies.length < 8; index += 1) {
+            summonBossMinion(enemy);
+          }
         }
 
         if ((enemy.kind === "Boss" || enemy.kind === "Venom") && enemy.veinTimer <= 0) {
           if (enemy.kind === "Boss") {
-            spawnVein(state.player.x + (Math.random() - 0.5) * 90, state.player.y + (Math.random() - 0.5) * 90, 42, 7);
-            enemy.veinTimer = 3.6;
+            spawnVein(state.player.x + (Math.random() - 0.5) * 90, state.player.y + (Math.random() - 0.5) * 90, 34, 5.6);
+            enemy.veinTimer = Math.max(3.1, 4.4 - enemy.bossTier * 0.1);
             logLine(`${enemy.name} ruptured the floor.`);
           } else {
             spawnVein(enemy.x, enemy.y, 30, 5.2);
@@ -758,30 +934,24 @@ if (relicPage) {
         if (enemy.kind === "Ranger" && gap <= enemy.range && enemy.attackTimer <= 0) {
           enemy.attackTimer = enemy.attackCadence;
           const theta = angleTo(enemy, state.player);
-          state.projectiles.push({
-            x: enemy.x,
-            y: enemy.y,
-            vx: Math.cos(theta) * enemy.projectileSpeed,
-            vy: Math.sin(theta) * enemy.projectileSpeed,
-            damage: enemy.damage,
-            from: "enemy",
-            life: 1.5,
-            color: "#ff88d0",
-          });
+          fireProjectile(enemy, theta, { color: "#ff88d0", life: 1.5 });
         } else if (enemy.kind === "Venom" && gap <= enemy.range && enemy.attackTimer <= 0) {
           enemy.attackTimer = enemy.attackCadence;
           const theta = angleTo(enemy, state.player);
-          state.projectiles.push({
-            x: enemy.x,
-            y: enemy.y,
-            vx: Math.cos(theta) * enemy.projectileSpeed,
-            vy: Math.sin(theta) * enemy.projectileSpeed,
-            damage: enemy.damage,
-            poison: enemy.poison,
-            from: "enemy",
-            life: 1.55,
-            color: "#7dff7a",
+          fireProjectile(enemy, theta, { poison: enemy.poison, color: "#7dff7a", life: 1.55 });
+        } else if (enemy.kind === "Weaver" && gap <= enemy.range && enemy.attackTimer <= 0) {
+          enemy.attackTimer = enemy.attackCadence;
+          const theta = angleTo(enemy, state.player);
+          fireProjectile(enemy, theta, { poison: 2, color: "#c6ff4d", life: 1.7, radius: 6 });
+          spawnVein(state.player.x + (Math.random() - 0.5) * 70, state.player.y + (Math.random() - 0.5) * 70, 26, 4.8);
+          logLine(`${enemy.name} stitched veins underfoot.`);
+        } else if (enemy.kind === "Warden" && gap <= enemy.range && enemy.attackTimer <= 0) {
+          enemy.attackTimer = enemy.attackCadence;
+          const baseTheta = angleTo(enemy, state.player);
+          [-0.22, 0, 0.22].forEach((offset) => {
+            fireProjectile(enemy, baseTheta + offset, { damage: Math.round(enemy.damage * 0.8), slow: 2.8, color: "#00d4ff", life: 1.8, radius: 5 });
           });
+          logLine(`${enemy.name} fired a slow-field burst.`);
         } else if (gap <= enemy.radius + 32 && enemy.attackTimer <= 0) {
           enemy.attackTimer = enemy.attackCadence;
           let incoming = enemy.damage;
@@ -858,7 +1028,7 @@ if (relicPage) {
           return false;
         }
 
-        if (projectile.from === "enemy" && distance(projectile, state.player) <= 22) {
+        if (projectile.from === "enemy" && distance(projectile, state.player) <= 17 + (projectile.radius || 5)) {
           let incoming = projectile.damage;
           if (state.player.shield > 0) {
             const absorbed = Math.min(state.player.shield, incoming);
@@ -872,6 +1042,10 @@ if (relicPage) {
               state.player.poisonTimer = Math.max(state.player.poisonTimer, 4.5);
               state.player.poisonTickTimer = 1;
               logLine("Toxic hit // poison applied.");
+            }
+            if (projectile.slow) {
+              state.player.slowTimer = Math.max(state.player.slowTimer, projectile.slow);
+              logLine("Slow field hit // movement reduced.");
             }
           }
           return false;
@@ -971,16 +1145,7 @@ if (relicPage) {
       state.enemies.forEach((enemy) => {
         const isPrimary = primaryEnemy === enemy;
         ctx.beginPath();
-        ctx.fillStyle =
-          enemy.kind === "Boss"
-            ? "#ff00ff"
-            : enemy.kind === "Ranger"
-              ? "#ffd166"
-              : enemy.kind === "Venom"
-                ? "#7dff7a"
-                : enemy.kind === "Brute"
-                  ? "#ff8a42"
-                  : "#ff4d88";
+        ctx.fillStyle = getEnemyColor(enemy);
         ctx.shadowBlur = enemy.kind === "Boss" ? 26 : 16;
         ctx.shadowColor = ctx.fillStyle;
         ctx.arc(enemy.x, enemy.y, enemy.radius, 0, Math.PI * 2);
@@ -1022,7 +1187,7 @@ if (relicPage) {
         ctx.fillStyle = projectile.color;
         ctx.shadowBlur = 14;
         ctx.shadowColor = projectile.color;
-        ctx.arc(projectile.x, projectile.y, 5, 0, Math.PI * 2);
+        ctx.arc(projectile.x, projectile.y, projectile.radius || 5, 0, Math.PI * 2);
         ctx.fill();
         ctx.shadowBlur = 0;
       });
@@ -1064,6 +1229,14 @@ if (relicPage) {
         ctx.strokeStyle = "rgba(125, 255, 122, 0.9)";
         ctx.lineWidth = 3;
         ctx.arc(state.player.x, state.player.y, 30, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+
+      if (state.player.slowTimer > 0) {
+        ctx.beginPath();
+        ctx.strokeStyle = "rgba(0, 212, 255, 0.78)";
+        ctx.lineWidth = 2;
+        ctx.arc(state.player.x, state.player.y, 36, 0, Math.PI * 2);
         ctx.stroke();
       }
 
