@@ -1041,7 +1041,7 @@ body[data-page="game-04"] .site-footer {
 }
 
 .relic-loadout-panel {
-  grid-template-rows: auto auto auto minmax(0, 1fr);
+  grid-template-rows: auto auto auto;
 }
 
 .relic-combat-panel {
@@ -1115,6 +1115,25 @@ body[data-page="game-04"] .site-footer {
   overflow-y: auto;
   overscroll-behavior: contain;
   padding-right: 0.3rem;
+}
+
+.arena-loadout-list {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  overflow: visible;
+  padding-right: 0;
+}
+
+.arena-loadout-list .loadout-card {
+  min-height: 100%;
+}
+
+.arena-loadout-list .loadout-card p {
+  font-size: 0.82rem;
+  line-height: 1.5;
+}
+
+.arena-loadout-list .loadout-card strong {
+  font-size: clamp(0.92rem, 1.3vw, 1.12rem);
 }
 
 .loadout-card {
@@ -1551,7 +1570,8 @@ body[data-page="game-04"] .site-footer {
   }
 
   .relic-grid,
-  .combat-actors {
+  .combat-actors,
+  .arena-loadout-list {
     grid-template-columns: 1fr;
   }
 
