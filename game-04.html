@@ -41,6 +41,7 @@
             <a href="game-02.html" data-nav="game-02">Game 02</a>
             <a href="game-03.html" data-nav="game-03">Game 03</a>
             <a href="game-04.html" data-nav="game-04">Game 04</a>
+            <a href="game-05.html" data-nav="game-05">Game 05</a>
           </nav>
         </div>
       </header>
@@ -152,6 +153,8 @@
                       <div class="combat-actions relic-top-actions">
                         <button class="button button-primary" type="button" data-relic-start>Start Run</button>
                         <button class="button button-secondary" type="button" data-relic-utility-use>Use Utility</button>
+                        <button class="button button-outline" type="button" data-relic-dummy>Dummy</button>
+                        <button class="button button-outline" type="button" data-relic-auto>Auto: Off</button>
                         <button class="button button-outline" type="button" data-relic-reset>Reset Build</button>
                       </div>
                     </div>
@@ -193,6 +196,17 @@
                     <div class="odds-panel">
                       <p class="card-tag accent-pink">Roll Rates</p>
                       <div class="odds-grid" data-relic-rates></div>
+                    </div>
+                    <div class="relic-confirm is-hidden" data-roll-confirm>
+                      <div class="relic-confirm-card">
+                        <p class="card-tag">High rarity warning</p>
+                        <h3>Confirm replacement</h3>
+                        <p data-roll-confirm-copy>Replacing high-rarity gear requires confirmation.</p>
+                        <div class="relic-confirm-actions">
+                          <button class="button button-secondary" type="button" data-roll-confirm-accept>Equip New</button>
+                          <button class="button button-outline" type="button" data-roll-confirm-cancel>Keep Current</button>
+                        </div>
+                      </div>
                     </div>
                   </section>
 

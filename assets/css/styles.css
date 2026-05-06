@@ -265,6 +265,10 @@ a:focus-visible {
   color: var(--accent-tertiary);
 }
 
+.accent-gold {
+  color: #ffd166;
+}
+
 .glitch-title,
 .page-title,
 h2,
@@ -625,11 +629,25 @@ body[data-page="game-04"] .site-shell {
   grid-template-rows: auto 1fr;
 }
 
+body[data-page="game-05"] .site-shell {
+  min-height: 100vh;
+  display: grid;
+  grid-template-rows: auto 1fr;
+}
+
 body[data-page="game-04"] .inner-page {
   min-height: 0;
   height: calc(100vh - 78px);
   display: grid;
   grid-template-rows: auto auto 1fr;
+  overflow: hidden;
+}
+
+body[data-page="game-05"] .inner-page {
+  min-height: 0;
+  height: calc(100vh - 78px);
+  display: grid;
+  grid-template-rows: auto 1fr;
   overflow: hidden;
 }
 
@@ -685,6 +703,56 @@ body[data-page="game-04"] .terminal-panel.slim-terminal {
 }
 
 body[data-page="game-04"] .site-footer {
+  display: none;
+}
+
+body[data-page="game-05"] .page-hero {
+  padding: 1rem 0 0.75rem;
+}
+
+body[data-page="game-05"] .page-hero-grid {
+  gap: 1rem;
+  align-items: start;
+}
+
+body[data-page="game-05"] .page-title {
+  font-size: clamp(2rem, 4vw, 3.15rem);
+}
+
+body[data-page="game-05"] .hero-text {
+  max-width: 54ch;
+  font-size: 0.95rem;
+}
+
+body[data-page="game-05"] .hero-actions {
+  margin: 1rem 0 0;
+}
+
+body[data-page="game-05"] .hero-actions .button {
+  min-height: 40px;
+  padding: 0.7rem 1rem;
+}
+
+body[data-page="game-05"] .detail-panel h2 {
+  font-size: 1.05rem;
+  margin-bottom: 0.45rem;
+}
+
+body[data-page="game-05"] .detail-panel p {
+  font-size: 0.9rem;
+}
+
+body[data-page="game-05"] .content-section {
+  padding: 0.75rem 0 1rem;
+  min-height: 0;
+  display: grid;
+}
+
+body[data-page="game-05"] .content-section > .container {
+  min-height: 0;
+}
+
+body[data-page="game-05"] .site-footer {
   display: none;
 }
 
@@ -785,6 +853,124 @@ body[data-page="game-04"] .site-footer {
     overflow: visible;
     padding-right: 0;
   }
+
+  body[data-page="game-05"] .page-hero {
+    display: none;
+  }
+
+  body[data-page="game-05"] .content-section {
+    padding: 0.4rem 0 0.5rem;
+  }
+
+  body[data-page="game-05"] .game-layout.alt-layout {
+    grid-template-columns: minmax(0, 1.6fr) minmax(320px, 0.9fr);
+    gap: 0.75rem;
+    align-items: stretch;
+    min-height: 100%;
+  }
+
+  body[data-page="game-05"] .tower-panel {
+    gap: 0.45rem;
+    min-height: 100%;
+  }
+
+  body[data-page="game-05"] .tower-hud {
+    align-items: center;
+    gap: 0.55rem;
+  }
+
+  body[data-page="game-05"] .snake-status {
+    margin-top: 0.18rem;
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+  }
+
+  body[data-page="game-05"] .score-row {
+    gap: 0.38rem;
+  }
+
+  body[data-page="game-05"] .score-box {
+    min-width: 82px;
+    padding: 0.42rem 0.55rem;
+  }
+
+  body[data-page="game-05"] .score-box span {
+    font-size: 0.56rem;
+  }
+
+  body[data-page="game-05"] .score-box strong {
+    margin-top: 0.12rem;
+    font-size: 1.1rem;
+  }
+
+  body[data-page="game-05"] .tower-screen {
+    min-height: 0;
+    height: 100%;
+    padding: 0.65rem;
+  }
+
+  body[data-page="game-05"] .tower-canvas {
+    width: 100%;
+    max-width: 100%;
+    max-height: min(44vh, 390px);
+  }
+
+  body[data-page="game-05"] .tower-sidebar {
+    grid-template-rows: auto auto minmax(0, 1fr);
+    min-height: 0;
+    gap: 0.75rem;
+  }
+
+  body[data-page="game-05"] .tower-roll-card,
+  body[data-page="game-05"] .tower-upgrade-card,
+  body[data-page="game-05"] .tower-log-card {
+    gap: 0.65rem;
+    min-height: 0;
+  }
+
+  body[data-page="game-05"] .tower-roll-preview {
+    padding: 0.75rem;
+  }
+
+  body[data-page="game-05"] .tower-roll-preview strong,
+  body[data-page="game-05"] .tower-upgrade-card strong {
+    font-size: 1rem;
+  }
+
+  body[data-page="game-05"] .tower-roll-preview p,
+  body[data-page="game-05"] .tower-upgrade-card p {
+    font-size: 0.78rem;
+    line-height: 1.4;
+  }
+
+  body[data-page="game-05"] .tower-roll-actions {
+    gap: 0.5rem;
+  }
+
+  body[data-page="game-05"] .tower-roll-actions .button,
+  body[data-page="game-05"] .tower-upgrade-actions .button {
+    min-height: 40px;
+    padding: 0.65rem 0.7rem;
+  }
+
+  body[data-page="game-05"] .tower-upgrade-grid {
+    gap: 0.5rem;
+  }
+
+  body[data-page="game-05"] .tower-upgrade-card article {
+    padding: 0.68rem;
+  }
+
+  body[data-page="game-05"] .tower-log {
+    min-height: 0;
+    max-height: none;
+    height: 100%;
+    padding: 0.75rem;
+  }
+}
+
+body[data-page="game-05"] .tower-log-card {
+  min-height: 0;
 }
 
 .landscape-warning {
@@ -1025,6 +1211,140 @@ body[data-page="game-04"] .site-footer {
   box-shadow: inset 0 0 24px rgba(0, 212, 255, 0.12), 0 0 24px rgba(0, 212, 255, 0.1);
 }
 
+.tower-panel {
+  display: grid;
+  gap: 1rem;
+}
+
+.tower-hud {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: end;
+}
+
+.tower-screen {
+  position: relative;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  padding: clamp(0.75rem, 2vw, 1rem);
+  background:
+    linear-gradient(rgba(151, 120, 208, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(151, 120, 208, 0.06) 1px, transparent 1px),
+    radial-gradient(circle at center, rgba(126, 82, 208, 0.14), transparent 60%),
+    linear-gradient(180deg, rgba(20, 14, 30, 0.96), rgba(8, 10, 16, 0.98));
+  background-size: 28px 28px, 28px 28px, auto, auto;
+}
+
+.tower-canvas {
+  width: min(100%, 760px);
+  aspect-ratio: 16 / 9;
+  border: 1px solid rgba(151, 120, 208, 0.34);
+  clip-path: var(--chamfer-sm);
+  background:
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.02) 2px, transparent 2px, transparent 4px),
+    rgba(14, 12, 22, 0.98);
+  box-shadow: inset 0 0 26px rgba(151, 120, 208, 0.14), 0 0 26px rgba(110, 70, 208, 0.08);
+  cursor: crosshair;
+}
+
+.tower-sidebar {
+  display: grid;
+  gap: 1rem;
+}
+
+.tower-roll-card,
+.tower-upgrade-card,
+.tower-log-card {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.tower-roll-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.6rem;
+}
+
+.tower-roll-preview {
+  padding: 1rem;
+  border: 1px solid rgba(255, 209, 102, 0.28);
+  clip-path: var(--chamfer-sm);
+  background: rgba(24, 18, 8, 0.82);
+}
+
+.tower-roll-preview span,
+.tower-upgrade-card span {
+  display: block;
+  color: var(--muted-foreground);
+  font-family: "Share Tech Mono", monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.tower-roll-preview strong,
+.tower-upgrade-card strong {
+  display: block;
+  margin-top: 0.35rem;
+  font-family: "Orbitron", monospace;
+  font-size: 1.12rem;
+}
+
+.tower-roll-preview p,
+.tower-upgrade-card p {
+  margin: 0.5rem 0 0;
+  color: #d8d0c4;
+}
+
+.tower-roll-meta {
+  color: #ffd166;
+  font-size: 0.82rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.tower-roll-meta.is-unaffordable {
+  color: #ff3366;
+  text-shadow: 0 0 10px rgba(255, 51, 102, 0.3);
+}
+
+.tower-upgrade-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.6rem;
+}
+
+.tower-upgrade-card article {
+  padding: 0.85rem;
+  border: 1px solid rgba(42, 42, 58, 0.95);
+  clip-path: var(--chamfer-sm);
+  background: rgba(18, 18, 26, 0.78);
+}
+
+.tower-upgrade-actions {
+  display: grid;
+}
+
+.tower-log {
+  min-height: 180px;
+  max-height: 240px;
+  overflow: auto;
+  padding: 1rem;
+  border: 1px solid rgba(42, 42, 58, 0.95);
+  clip-path: var(--chamfer-sm);
+  background: rgba(10, 10, 15, 0.96);
+  display: grid;
+  gap: 0.4rem;
+  align-content: start;
+}
+
+.tower-log p {
+  margin: 0;
+  color: #ddd4c5;
+}
+
 .relic-panel {
   display: grid;
   gap: 1rem;
@@ -1254,8 +1574,12 @@ body[data-page="game-04"] .site-footer {
 .relic-top-actions,
 .relic-roll-actions {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 0.6rem;
+}
+
+.relic-roll-actions {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .relic-top-actions .button,
@@ -1393,6 +1717,53 @@ body[data-page="game-04"] .site-footer {
   margin-top: 0.1rem;
   font-family: "Orbitron", monospace;
   font-size: 0.52rem;
+}
+
+.relic-confirm {
+  position: absolute;
+  inset: 0;
+  z-index: 8;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  background:
+    repeating-linear-gradient(0deg, rgba(255, 51, 102, 0.12), rgba(255, 51, 102, 0.12) 2px, transparent 2px, transparent 5px),
+    radial-gradient(circle at center, rgba(255, 51, 102, 0.38), rgba(10, 10, 15, 0.94) 68%);
+  border: 1px solid rgba(255, 51, 102, 0.75);
+  box-shadow: inset 0 0 42px rgba(255, 51, 102, 0.34), 0 0 28px rgba(255, 51, 102, 0.25);
+}
+
+.relic-confirm.is-hidden {
+  display: none;
+}
+
+.relic-confirm-card {
+  width: min(100%, 420px);
+  display: grid;
+  gap: 0.85rem;
+  padding: 1rem;
+  border: 2px solid var(--destructive);
+  background: rgba(20, 4, 10, 0.96);
+  clip-path: var(--chamfer);
+  box-shadow: 0 0 18px rgba(255, 51, 102, 0.45);
+}
+
+.relic-confirm-card h3 {
+  color: #ffe7ef;
+  font-size: 1rem;
+  letter-spacing: 0.12em;
+}
+
+.relic-confirm-card p {
+  margin: 0;
+  color: #ffd3dd;
+  font-size: 0.8rem;
+}
+
+.relic-confirm-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.55rem;
 }
 
 .snake-canvas {
@@ -1597,7 +1968,17 @@ body[data-page="game-04"] .site-footer {
     overflow: visible;
   }
 
+  body[data-page="game-05"] .inner-page {
+    height: auto;
+    min-height: calc(100vh - 78px);
+    overflow: visible;
+  }
+
   body[data-page="game-04"] .content-section {
+    display: block;
+  }
+
+  body[data-page="game-05"] .content-section {
     display: block;
   }
 
@@ -1605,8 +1986,17 @@ body[data-page="game-04"] .site-footer {
     display: block;
   }
 
+  body[data-page="game-05"] .site-footer {
+    display: block;
+  }
+
   .relic-grid,
   .combat-actors {
+    grid-template-columns: 1fr;
+  }
+
+  .tower-roll-actions,
+  .tower-upgrade-grid {
     grid-template-columns: 1fr;
   }
 
@@ -1686,5 +2076,14 @@ body[data-page="game-04"] .site-footer {
   .stage-screen,
   .wide-stage .stage-screen {
     min-height: 280px;
+  }
+}
+
+@media (min-width: 901px) {
+  body[data-page="game-05"] .tower-roll-actions .button,
+  body[data-page="game-05"] .tower-upgrade-actions .button {
+    min-height: 36px;
+    padding: 0.58rem 0.62rem;
+    font-size: 0.88rem;
   }
 }

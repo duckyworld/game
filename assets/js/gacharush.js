@@ -26,8 +26,14 @@ if (relicPage) {
   const log = document.querySelector("[data-relic-log]");
   const startButton = document.querySelector("[data-relic-start]");
   const utilityButton = document.querySelector("[data-relic-utility-use]");
+  const dummyButton = document.querySelector("[data-relic-dummy]");
+  const autoButton = document.querySelector("[data-relic-auto]");
   const resetButton = document.querySelector("[data-relic-reset]");
   const rollButtons = document.querySelectorAll("[data-roll-type]");
+  const rollConfirm = document.querySelector("[data-roll-confirm]");
+  const rollConfirmCopy = document.querySelector("[data-roll-confirm-copy]");
+  const rollConfirmAccept = document.querySelector("[data-roll-confirm-accept]");
+  const rollConfirmCancel = document.querySelector("[data-roll-confirm-cancel]");
   const canvas = document.querySelector("[data-relic-canvas]");
 
   if (
@@ -56,8 +62,14 @@ if (relicPage) {
     log &&
     startButton &&
     utilityButton &&
+    dummyButton &&
+    autoButton &&
     resetButton &&
     canvas &&
+    rollConfirm &&
+    rollConfirmCopy &&
+    rollConfirmAccept &&
+    rollConfirmCancel &&
     rollButtons.length
   ) {
     const ctx = canvas.getContext("2d");
@@ -123,6 +135,9 @@ if (relicPage) {
       { name: "Throne Override", rarity: "Godlike", type: "boost", power: 2.05, charges: 3, copy: "Godlike overclock that turns every weapon into a run-ending engine." },
       { name: "Judgment Halo", rarity: "Godlike", type: "shield", power: 58, charges: 3, copy: "Godlike barrier stack built to survive boss volleys and brute hits." },
       { name: "NATHAN OVERRIDE", rarity: "Nathan", type: "boost", power: 2.8, charges: 4, copy: "Nathan-tier admin utility. Huge damage overclock with extra charges." },
+      { name: "Merc Contract", rarity: "Exotic", type: "army", power: 3, charges: 2, copy: "Calls in a purple strike squad to fight beside you." },
+      { name: "Seraph Battalion", rarity: "Divine", type: "army", power: 5, charges: 2, copy: "Summons stronger allied units with boosted damage." },
+      { name: "Goat Legion", rarity: "Godlike", type: "army", power: 7, charges: 3, copy: "Deploys a goated purple army with elite stats." },
     ];
 
     const modules = [
@@ -170,6 +185,10 @@ if (relicPage) {
       xp: 0,
       xpToNext: 40,
       adminMode: false,
+      dummyMode: false,
+      autoStart: false,
+      autoStartTimer: 0,
+      autoStartTimeout: 0,
       inRun: false,
       animationFrame: 0,
       lastTime: 0,
@@ -190,6 +209,7 @@ if (relicPage) {
         slowTimer: 0,
       },
       enemies: [],
+      allies: [],
       projectiles: [],
       pickups: [],
       veins: [],
@@ -200,6 +220,11 @@ if (relicPage) {
       swingTimer: 0,
       swingAngle: 0,
       attackFx: [],
+      nathanShots: 0,
+      nathanOverloadReady: true,
+      nathanStormTimer: 0,
+      armyKills: 0,
+      pendingRoll: null,
     };
 
     const rarityLabel = (item) => `${item.name} // ${item.rarity}`;
@@ -225,18 +250,29 @@ if (relicPage) {
       return pool[pool.length - 1];
     };
 
-    const confirmRollSwap = (currentItem, nextItem, slotName) => {
+    const needsRollConfirmation = (currentItem, nextItem) => {
       if (!isAboveExotic(currentItem) && !isAboveExotic(nextItem)) {
-        return true;
+        return false;
       }
 
       if (currentItem.name === nextItem.name && currentItem.rarity === nextItem.rarity) {
-        return true;
+        return false;
       }
 
-      return window.confirm(
-        `Confirm ${slotName} swap?\n\nCurrent: ${rarityLabel(currentItem)}\nNew roll: ${rarityLabel(nextItem)}\n\nOK = equip new roll\nCancel = keep current item`
-      );
+      return true;
+    };
+
+    const showRollConfirm = (slotName, currentItem, nextItem, onAccept, onCancel) => {
+      state.pendingRoll = { slotName, currentItem, nextItem, onAccept, onCancel };
+      rollConfirmCopy.textContent = `Current ${slotName}: ${rarityLabel(currentItem)} // New roll: ${rarityLabel(nextItem)}. Equip it or keep your current gear?`;
+      rollConfirm.classList.remove("is-hidden");
+      refreshUi();
+    };
+
+    const closeRollConfirm = () => {
+      state.pendingRoll = null;
+      rollConfirm.classList.add("is-hidden");
+      refreshUi();
     };
 
     const renderRates = () => {
@@ -276,6 +312,8 @@ if (relicPage) {
 
       return enemy.kind === "Runner"
         ? "#00ff88"
+        : enemy.kind === "Dummy"
+          ? "#e0e0e0"
         : enemy.kind === "Ranger"
           ? "#ffd166"
           : enemy.kind === "Venom"
@@ -450,6 +488,26 @@ if (relicPage) {
         };
       }
 
+      if (kind === "dummy") {
+        return {
+          kind: "Dummy",
+          name: "Training Dummy",
+          x: canvas.width * 0.68,
+          y: canvas.height * 0.5,
+          hp: 999999999,
+          maxHp: 999999999,
+          damage: 0,
+          speed: 0,
+          radius: 28,
+          attackTimer: 0,
+          attackCadence: 999,
+          range: 0,
+          projectileSpeed: 0,
+          veinTimer: 0,
+          immortal: true,
+        };
+      }
+
       return {
         kind: "Monster",
         name: `Mob ${laneOffset + 1}`,
@@ -473,11 +531,14 @@ if (relicPage) {
         return null;
       }
 
-      let primary = state.enemies[0];
+      const targetPool = state.enemies.some((enemy) => !enemy.immortal)
+        ? state.enemies.filter((enemy) => !enemy.immortal)
+        : state.enemies;
+      let primary = targetPool[0];
       let bestDistance = distance(state.player, primary);
 
-      for (let index = 1; index < state.enemies.length; index += 1) {
-        const current = state.enemies[index];
+      for (let index = 1; index < targetPool.length; index += 1) {
+        const current = targetPool[index];
         const currentDistance = distance(state.player, current);
         if (currentDistance < bestDistance) {
           primary = current;
@@ -498,7 +559,7 @@ if (relicPage) {
       state.player.hp = Math.min(state.player.hp, state.player.maxHp);
 
       waveOutput.textContent = String(state.wave);
-      rollsOutput.textContent = String(state.rolls);
+      rollsOutput.textContent = state.dummyMode ? "INF" : String(state.rolls);
       bossesOutput.textContent = String(state.bossesCleared);
       levelOutput.textContent = String(state.level);
       xpOutput.textContent = `${state.xp} / ${state.xpToNext}`;
@@ -521,8 +582,8 @@ if (relicPage) {
         enemyName.textContent = primaryEnemy.name;
         enemyType.textContent = `${primaryEnemy.kind} // ${state.enemies.length} live`;
         enemyIntent.textContent = `DMG ${primaryEnemy.damage}${primaryEnemy.poison ? `+${primaryEnemy.poison} tox` : ""} // SPD ${Math.round(primaryEnemy.speed)} // CAD ${primaryEnemy.attackCadence.toFixed(2)}s`;
-        enemyHp.textContent = `${Math.max(0, Math.ceil(primaryEnemy.hp))} / ${primaryEnemy.maxHp}`;
-        enemyBar.style.width = `${clamp((primaryEnemy.hp / primaryEnemy.maxHp) * 100, 0, 100)}%`;
+        enemyHp.textContent = primaryEnemy.immortal ? "Infinite" : `${Math.max(0, Math.ceil(primaryEnemy.hp))} / ${primaryEnemy.maxHp}`;
+        enemyBar.style.width = primaryEnemy.immortal ? "100%" : `${clamp((primaryEnemy.hp / primaryEnemy.maxHp) * 100, 0, 100)}%`;
       } else {
         enemyName.textContent = "No target";
         enemyType.textContent = "Waiting";
@@ -532,12 +593,58 @@ if (relicPage) {
       }
 
       rollButtons.forEach((button) => {
-        button.disabled = state.inRun || state.rolls <= 0;
+        button.disabled = (state.inRun && !state.dummyMode) || (!state.dummyMode && state.rolls <= 0) || Boolean(state.pendingRoll);
       });
       startButton.disabled = state.inRun;
       startButton.textContent = state.wave === 0 ? "Start Run" : "Fight Next Wave";
       utilityButton.disabled = !state.inRun || state.utilityCharges <= 0;
       utilityButton.textContent = `Use Utility (${state.utilityCharges})`;
+      autoButton.textContent = state.autoStart
+        ? state.autoStartTimer > 0
+          ? `Auto: ${Math.ceil(state.autoStartTimer)}s`
+          : "Auto: On"
+        : "Auto: Off";
+    };
+
+    const clearAutoStart = () => {
+      if (state.autoStartTimeout) {
+        window.clearTimeout(state.autoStartTimeout);
+        state.autoStartTimeout = 0;
+      }
+      state.autoStartTimer = 0;
+      refreshUi();
+    };
+
+    const beginNextWave = () => {
+      if (state.inRun || state.pendingRoll) {
+        return;
+      }
+
+      clearAutoStart();
+      spawnWave();
+      state.inRun = true;
+      state.lastTime = 0;
+      refreshUi();
+      draw();
+      state.animationFrame = window.requestAnimationFrame(animate);
+    };
+
+    const scheduleAutoStart = () => {
+      if (!state.autoStart || state.inRun || state.pendingRoll || state.dummyMode) {
+        return;
+      }
+
+      clearAutoStart();
+      state.autoStartTimer = 0;
+      setStatus("Auto start armed // launching next wave");
+      refreshUi();
+      state.autoStartTimeout = window.setTimeout(() => {
+        if (!state.autoStart || state.inRun || state.pendingRoll || state.dummyMode) {
+          clearAutoStart();
+          return;
+        }
+        beginNextWave();
+      }, 0);
     };
 
     const spawnWave = () => {
@@ -604,20 +711,24 @@ if (relicPage) {
       state.projectiles = [];
       state.veins = [];
       stopRun();
+      scheduleAutoStart();
     };
 
     const handleDefeat = () => {
       logLine("Operator down. Run lost.");
       setStatus("Run failed // rebuild and try again");
       state.enemies = [];
+      state.allies = [];
       state.projectiles = [];
       state.pickups = [];
       state.veins = [];
+      clearAutoStart();
       stopRun();
     };
 
     const resetBuild = () => {
       stopRun();
+      clearAutoStart();
       state.rolls = 6;
       state.wave = 0;
       state.bossesCleared = 0;
@@ -625,6 +736,7 @@ if (relicPage) {
       state.xp = 0;
       state.xpToNext = 40;
       state.adminMode = false;
+      state.dummyMode = false;
       state.weapon = starterWeapon;
       state.utility = starterUtility;
       state.module = starterModule;
@@ -642,12 +754,19 @@ if (relicPage) {
         slowTimer: 0,
       };
       state.enemies = [];
+      state.allies = [];
       state.projectiles = [];
       state.pickups = [];
       state.veins = [];
       state.utilityCharges = 1;
       state.droneTimer = 0;
       state.attackFx = [];
+      state.nathanShots = 0;
+      state.nathanOverloadReady = true;
+      state.nathanStormTimer = 0;
+      state.armyKills = 0;
+      state.pendingRoll = null;
+      rollConfirm.classList.add("is-hidden");
       state.keys.clear();
       state.swingTimer = 0;
       log.innerHTML = "";
@@ -700,6 +819,9 @@ if (relicPage) {
           }
         });
         logLine(`${state.utility.name} crushed nearby targets.`);
+      } else if (state.utility.type === "army") {
+        summonFriendlyArmy(state.utility.power, state.utility.rarity);
+        logLine(`${state.utility.name} deployed allied units.`);
       }
 
       refreshUi();
@@ -757,8 +879,8 @@ if (relicPage) {
         const dy = state.player.y - pickup.y;
         const gap = Math.hypot(dx, dy) || 1;
 
-        if (gap < 88) {
-          const pull = pickup.type === "xp" ? 180 : 156;
+        if (gap < 420) {
+          const pull = pickup.type === "xp" ? 230 : 210;
           pickup.x += dx / gap * pull * delta;
           pickup.y += dy / gap * pull * delta;
         }
@@ -776,6 +898,66 @@ if (relicPage) {
         }
 
         return true;
+      });
+    };
+
+    const summonFriendlyArmy = (bonusSize = 0, rarity = "Common") => {
+      const rarityBoost = rarity === "Godlike" ? 2.1 : rarity === "Divine" ? 1.7 : rarity === "Exotic" ? 1.35 : 1.2;
+      const armySize = 5 + bonusSize + Math.min(6, Math.floor(state.wave / 4));
+
+      for (let index = 0; index < armySize; index += 1) {
+        state.allies.push({
+          name: `Ally Unit ${state.allies.length + 1}`,
+          x: clamp(state.player.x + (Math.random() - 0.5) * 72, arena.inset + 12, arena.width - arena.inset - 12),
+          y: clamp(state.player.y + (Math.random() - 0.5) * 72, arena.inset + 12, arena.height - arena.inset - 12),
+          hp: Math.round((92 + state.wave * 8) * rarityBoost),
+          maxHp: Math.round((92 + state.wave * 8) * rarityBoost),
+          damage: Math.round((18 + Math.floor(state.wave * 1.5)) * rarityBoost),
+          speed: 148 + Math.min(40, state.wave * 2),
+          radius: 12,
+          attackTimer: Math.random() * 0.5,
+          rarity,
+        });
+      }
+
+      logLine(`Friendly army summoned // ${armySize} units deployed.`);
+      setStatus("Army protocol online // allies fighting beside you");
+    };
+
+    const updateAllies = (delta) => {
+      state.allies = state.allies.filter((ally) => ally.hp > 0);
+
+      state.allies.forEach((ally) => {
+        const target = state.enemies
+          .filter((enemy) => !enemy.immortal)
+          .sort((a, b) => distance(ally, a) - distance(ally, b))[0];
+
+        if (!target) {
+          const followGap = distance(ally, state.player);
+          if (followGap > 72) {
+            const theta = angleTo(ally, state.player);
+            ally.x += Math.cos(theta) * ally.speed * 0.6 * delta;
+            ally.y += Math.sin(theta) * ally.speed * 0.6 * delta;
+          }
+          return;
+        }
+
+        const gap = distance(ally, target);
+        const theta = angleTo(ally, target);
+        if (gap > ally.radius + target.radius + 18) {
+          ally.x += Math.cos(theta) * ally.speed * delta;
+          ally.y += Math.sin(theta) * ally.speed * delta;
+        }
+
+        ally.x = clamp(ally.x, arena.inset, arena.width - arena.inset);
+        ally.y = clamp(ally.y, arena.inset, arena.height - arena.inset);
+        ally.attackTimer -= delta;
+
+        if (gap <= ally.radius + target.radius + 24 && ally.attackTimer <= 0) {
+          ally.attackTimer = 0.7;
+          dealWeaponDamage(target, ally.damage);
+          addAttackFx({ type: "shot", x: ally.x, y: ally.y, angle: theta, range: gap, color: "#00ff88", life: 0.1, maxLife: 0.1 });
+        }
       });
     };
 
@@ -817,7 +999,17 @@ if (relicPage) {
     const getArcGap = (from, target, angle) =>
       Math.abs(Math.atan2(Math.sin(angleTo(from, target) - angle), Math.cos(angleTo(from, target) - angle)));
 
+    const reduceIncomingDamage = (amount) =>
+      Math.ceil(amount * (state.weapon.rarity === "Nathan" ? 0.4 : 1));
+
+    const hasNathanGoat = () => state.weapon.name === "NATHAN GOAT";
+
     const dealWeaponDamage = (enemy, amount) => {
+      if (enemy.immortal) {
+        logLine(`${enemy.name} absorbed ${Math.round(amount)} test damage.`);
+        return;
+      }
+
       if (enemy.kind === "Boss" && Math.random() < (enemy.dodgeChance || 0)) {
         logLine(`${enemy.name} dodged the strike.`);
         return;
@@ -828,6 +1020,33 @@ if (relicPage) {
 
     const applyWeaponDamage = (primaryEnemy, damage, strikeAngle, stats) => {
       const type = state.weapon.attackType || (state.weapon.style === "blade" ? "slash" : "shot");
+
+      if (hasNathanGoat()) {
+        const closeTargets = state.enemies.filter((enemy) => distance(state.player, enemy) <= 96 + enemy.radius);
+        if (closeTargets.length) {
+          state.swingAngle = strikeAngle;
+          addAttackFx({ type: "nathanSlash", x: state.player.x, y: state.player.y, angle: strikeAngle, range: 108, color: "#4b0082" });
+          closeTargets.forEach((enemy) => {
+            dealWeaponDamage(enemy, 400);
+          });
+          logLine("NATHAN GOAT close-range void slash triggered for 400 AOE.");
+          return;
+        }
+
+        state.nathanShots += 1;
+        if (state.nathanShots >= 50) {
+          state.nathanShots = 0;
+          state.nathanStormTimer = 5;
+          addAttackFx({ type: "nathanCharge", x: state.player.x, y: state.player.y, angle: strikeAngle, range: stats.range, color: "#d78cff" });
+          state.enemies.forEach((enemy) => {
+            if (distance(state.player, enemy) <= stats.range + enemy.radius && getArcGap(state.player, enemy, strikeAngle) <= 0.22) {
+              dealWeaponDamage(enemy, 600);
+            }
+          });
+          logLine("NATHAN GOAT charged radiant void beam fired for 600. Overstorm online.");
+          return;
+        }
+      }
 
       if (type === "slash") {
         state.swingTimer = 0.18;
@@ -939,8 +1158,9 @@ if (relicPage) {
         boss.y = clamp(boss.y + Math.sin(theta) * (62 + boss.bossTier * 8 + (boss.isTopBoss ? 50 : 0)), arena.inset + boss.radius, arena.height - arena.inset - boss.radius);
         spawnVein(boss.x, boss.y, 28 + boss.bossTier * 2 + (boss.isTopBoss ? 14 : 0), boss.isTopBoss ? 6.8 : 4.6);
         if (distance(boss, state.player) <= boss.radius + 36) {
-          state.player.hp -= Math.round(boss.damage * 0.75);
-          logLine(`${boss.name} charge crushed you.`);
+          const incoming = reduceIncomingDamage(Math.round(boss.damage * 0.75));
+          state.player.hp -= incoming;
+          logLine(`${boss.name} charge crushed you for ${incoming}.`);
         } else {
           logLine(`${boss.name} charged through the grid.`);
         }
@@ -962,6 +1182,7 @@ if (relicPage) {
             incoming -= absorbed;
           }
           if (incoming > 0) {
+            incoming = reduceIncomingDamage(incoming);
             state.player.hp -= incoming;
             logLine(`Vein burst hit for ${incoming}.`);
           }
@@ -1007,6 +1228,14 @@ if (relicPage) {
       if (state.player.boost > 0) {
         state.player.boost -= delta;
       }
+      if (state.nathanStormTimer > 0) {
+        state.nathanStormTimer -= delta;
+        state.enemies.forEach((enemy) => {
+        if (distance(state.player, enemy) <= 230 + enemy.radius) {
+            dealWeaponDamage(enemy, 90 * delta);
+          }
+        });
+      }
       if (state.player.slowTimer > 0) {
         state.player.slowTimer -= delta;
       }
@@ -1014,9 +1243,9 @@ if (relicPage) {
         state.player.poisonTimer -= delta;
         state.player.poisonTickTimer -= delta;
         if (state.player.poisonTickTimer <= 0) {
-          state.player.hp -= 4;
+          state.player.hp -= reduceIncomingDamage(4);
           state.player.poisonTickTimer = 1;
-          logLine("Poison tick for 4.");
+          logLine(`Poison tick for ${reduceIncomingDamage(4)}.`);
         }
       } else {
         state.player.poisonTickTimer = 0;
@@ -1032,6 +1261,7 @@ if (relicPage) {
       }
 
       updateVeins(delta);
+      updateAllies(delta);
 
       state.enemies.forEach((enemy) => {
         const dx = state.player.x - enemy.x;
@@ -1118,6 +1348,7 @@ if (relicPage) {
           }
 
           if (incoming > 0) {
+            incoming = reduceIncomingDamage(incoming);
             state.player.hp -= incoming;
             logLine(`${enemy.name} hit for ${incoming}.`);
             if (enemy.kind === "Venom") {
@@ -1175,6 +1406,7 @@ if (relicPage) {
             incoming -= absorbed;
           }
           if (incoming > 0) {
+            incoming = reduceIncomingDamage(incoming);
             state.player.hp -= incoming;
             logLine(`Ranged hit for ${incoming}.`);
             if (projectile.poison) {
@@ -1199,18 +1431,37 @@ if (relicPage) {
           survivors.push(enemy);
         } else {
           dropPickups(enemy);
+          if (!enemy.immortal) {
+            state.armyKills += 1;
+            if (state.armyKills % 20 === 0) {
+              summonFriendlyArmy();
+            }
+          }
           logLine(`${enemy.name} deleted from the graph.`);
         }
       });
       state.enemies = survivors;
       updatePickups(delta);
 
+      if (state.player.hp <= 0 && hasNathanGoat() && state.nathanOverloadReady) {
+        state.nathanOverloadReady = false;
+        state.player.hp = state.player.maxHp;
+        state.player.shield += 80;
+        state.player.poisonTimer = 0;
+        state.player.slowTimer = 0;
+        state.nathanStormTimer = 5;
+        addAttackFx({ type: "blast", x: state.player.x, y: state.player.y, range: 92, color: "#d78cff", life: 0.35, maxLife: 0.35 });
+        logLine("NATHAN OVERLOAD triggered // full health restored.");
+        refreshUi();
+        return;
+      }
+
       if (state.player.hp <= 0) {
         handleDefeat();
         return;
       }
 
-      if (!state.enemies.length) {
+      if (!state.enemies.some((enemy) => !enemy.immortal) && state.wave > 0) {
         handleVictory();
         return;
       }
@@ -1304,6 +1555,21 @@ if (relicPage) {
         }
       });
 
+      state.allies.forEach((ally) => {
+        ctx.beginPath();
+        ctx.fillStyle = ally.rarity === "Godlike" ? "#fff1a1" : ally.rarity === "Divine" ? "#d78cff" : "#8a00ff";
+        ctx.shadowBlur = 14;
+        ctx.shadowColor = ctx.fillStyle;
+        ctx.rect(ally.x - ally.radius, ally.y - ally.radius, ally.radius * 2, ally.radius * 2);
+        ctx.fill();
+        ctx.shadowBlur = 0;
+
+        ctx.fillStyle = "#0a0a0f";
+        ctx.fillRect(ally.x - ally.radius, ally.y - ally.radius - 10, ally.radius * 2, 4);
+        ctx.fillStyle = ally.rarity === "Godlike" ? "#fff1a1" : "#8a00ff";
+        ctx.fillRect(ally.x - ally.radius, ally.y - ally.radius - 10, ally.radius * 2 * clamp(ally.hp / ally.maxHp, 0, 1), 4);
+      });
+
       state.pickups.forEach((pickup) => {
         const pulseRadius = pickup.radius + Math.sin(pickup.pulse) * 1.5;
         ctx.beginPath();
@@ -1340,10 +1606,11 @@ if (relicPage) {
         ctx.shadowBlur = 18;
         ctx.shadowColor = fx.color;
 
-        if (fx.type === "slash" || fx.type === "cleave") {
-          ctx.lineWidth = fx.type === "cleave" ? 11 : 7;
+        if (fx.type === "slash" || fx.type === "cleave" || fx.type === "nathanSlash") {
+          ctx.lineWidth = fx.type === "nathanSlash" ? 14 : fx.type === "cleave" ? 11 : 7;
           ctx.beginPath();
-          ctx.arc(fx.x, fx.y, fx.range, fx.angle - (fx.type === "cleave" ? 1.12 : 0.65), fx.angle + (fx.type === "cleave" ? 1.12 : 0.65));
+          const arcSize = fx.type === "nathanSlash" ? Math.PI * 1.4 : fx.type === "cleave" ? 1.12 : 0.65;
+          ctx.arc(fx.x, fx.y, fx.range, fx.angle - arcSize, fx.angle + arcSize);
           ctx.stroke();
         } else if (fx.type === "stab") {
           ctx.lineWidth = 6;
@@ -1354,8 +1621,8 @@ if (relicPage) {
           ctx.beginPath();
           ctx.arc(fx.x + Math.cos(fx.angle) * fx.range, fx.y + Math.sin(fx.angle) * fx.range, 7, 0, Math.PI * 2);
           ctx.fill();
-        } else if (fx.type === "beam" || fx.type === "pierce" || fx.type === "shot" || fx.type === "burst") {
-          const lineWidth = fx.type === "beam" ? 8 : fx.type === "burst" ? 4 : 3;
+        } else if (fx.type === "beam" || fx.type === "pierce" || fx.type === "shot" || fx.type === "burst" || fx.type === "nathanCharge") {
+          const lineWidth = fx.type === "nathanCharge" ? 18 : fx.type === "beam" ? 8 : fx.type === "burst" ? 4 : 3;
           ctx.lineWidth = lineWidth;
           ctx.beginPath();
           ctx.moveTo(fx.x, fx.y);
@@ -1400,6 +1667,14 @@ if (relicPage) {
         ctx.strokeStyle = "rgba(255, 255, 255, 0.82)";
         ctx.lineWidth = 3;
         ctx.arc(state.player.x, state.player.y, 24, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+
+      if (state.nathanStormTimer > 0) {
+        ctx.beginPath();
+        ctx.strokeStyle = "rgba(215, 140, 255, 0.75)";
+        ctx.lineWidth = 4;
+        ctx.arc(state.player.x, state.player.y, 230, 0, Math.PI * 2);
         ctx.stroke();
       }
 
@@ -1450,36 +1725,56 @@ if (relicPage) {
 
     rollButtons.forEach((button) => {
       button.addEventListener("click", () => {
-        if (state.inRun || state.rolls <= 0) {
+        if ((state.inRun && !state.dummyMode) || (!state.dummyMode && state.rolls <= 0) || state.pendingRoll) {
           return;
         }
 
-        state.rolls -= 1;
+        if (!state.dummyMode) {
+          state.rolls -= 1;
+        }
         const type = button.dataset.rollType;
 
         if (type === "weapon") {
           const nextWeapon = randomItem(weapons);
-          if (confirmRollSwap(state.weapon, nextWeapon, "weapon")) {
+          const equipWeapon = () => {
             state.weapon = nextWeapon;
             logLine(`Rolled weapon: ${state.weapon.name}.`);
-          } else {
+          };
+          const keepWeapon = () => {
             logLine(`Kept weapon: ${state.weapon.name}. Rolled ${nextWeapon.name} was declined.`);
+          }
+          if (needsRollConfirmation(state.weapon, nextWeapon)) {
+            showRollConfirm("weapon", state.weapon, nextWeapon, equipWeapon, keepWeapon);
+          } else {
+            equipWeapon();
           }
         } else if (type === "utility") {
           const nextUtility = randomItem(utilities);
-          if (confirmRollSwap(state.utility, nextUtility, "utility")) {
+          const equipUtility = () => {
             state.utility = nextUtility;
             logLine(`Rolled utility: ${state.utility.name}.`);
-          } else {
+          };
+          const keepUtility = () => {
             logLine(`Kept utility: ${state.utility.name}. Rolled ${nextUtility.name} was declined.`);
+          }
+          if (needsRollConfirmation(state.utility, nextUtility)) {
+            showRollConfirm("utility", state.utility, nextUtility, equipUtility, keepUtility);
+          } else {
+            equipUtility();
           }
         } else {
           const nextModule = randomItem(modules);
-          if (confirmRollSwap(state.module, nextModule, "module")) {
+          const equipModule = () => {
             state.module = nextModule;
             logLine(`Rolled module: ${state.module.name}.`);
-          } else {
+          };
+          const keepModule = () => {
             logLine(`Kept module: ${state.module.name}. Rolled ${nextModule.name} was declined.`);
+          }
+          if (needsRollConfirmation(state.module, nextModule)) {
+            showRollConfirm("module", state.module, nextModule, equipModule, keepModule);
+          } else {
+            equipModule();
           }
         }
 
@@ -1488,21 +1783,74 @@ if (relicPage) {
       });
     });
 
+    rollConfirmAccept.addEventListener("click", () => {
+      if (!state.pendingRoll) {
+        return;
+      }
+
+      state.pendingRoll.onAccept();
+      closeRollConfirm();
+      draw();
+    });
+
+    rollConfirmCancel.addEventListener("click", () => {
+      if (!state.pendingRoll) {
+        return;
+      }
+
+      state.pendingRoll.onCancel();
+      closeRollConfirm();
+      draw();
+    });
+
     startButton.addEventListener("click", () => {
       if (state.inRun) {
         return;
       }
 
-      spawnWave();
-      state.inRun = true;
-      state.lastTime = 0;
+      beginNextWave();
+    });
+
+    autoButton.addEventListener("click", () => {
+      state.autoStart = !state.autoStart;
+      if (state.autoStart) {
+        logLine("Auto start enabled // next wave starts immediately.");
+        scheduleAutoStart();
+      } else {
+        logLine("Auto start disabled.");
+        clearAutoStart();
+      }
       refreshUi();
-      draw();
-      state.animationFrame = window.requestAnimationFrame(animate);
     });
 
     utilityButton.addEventListener("click", () => {
       useUtility();
+      draw();
+    });
+
+    dummyButton.addEventListener("click", () => {
+      const existingDummy = state.enemies.find((enemy) => enemy.kind === "Dummy");
+
+      if (existingDummy) {
+        existingDummy.x = canvas.width * 0.68;
+        existingDummy.y = canvas.height * 0.5;
+        logLine("Training dummy repositioned.");
+      } else {
+        state.enemies.push(createEnemy("dummy", 0, state.wave || 1));
+        logLine("Training dummy deployed // infinite health.");
+      }
+
+      state.dummyMode = true;
+      state.rolls = Infinity;
+
+      if (!state.inRun) {
+        state.inRun = true;
+        state.lastTime = 0;
+        state.animationFrame = window.requestAnimationFrame(animate);
+      }
+
+      setStatus("Dummy test online // infinite health target");
+      refreshUi();
       draw();
     });
 

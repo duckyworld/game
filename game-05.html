@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Neon Arcade Grid | Game 05</title>
+    <meta
+      name="description"
+      content="Game 05 is a gambling tower defense prototype where you roll for towers, place your luck, and defend the vault."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=Orbitron:wght@500;700;800;900&family=Share+Tech+Mono&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="assets/css/styles.css" />
+    <script defer src="assets/js/main.js"></script>
+    <script defer src="assets/js/towerluck.js"></script>
+  </head>
+  <body data-page="game-05">
+    <div class="site-shell">
+      <header class="site-header">
+        <div class="container nav-frame">
+          <a class="brand" href="index.html" aria-label="Neon Arcade Grid home">
+            <span class="brand-mark"></span>
+            <span class="brand-copy">
+              <strong>Neon Arcade Grid</strong>
+              <span>boot sector: public arcade</span>
+            </span>
+          </a>
+          <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span class="sr-only">Toggle navigation</span>
+          </button>
+          <nav class="site-nav" id="site-nav" aria-label="Primary">
+            <a href="index.html" data-nav="home">Home</a>
+            <a href="game-01.html" data-nav="game-01">Game 01</a>
+            <a href="game-02.html" data-nav="game-02">Game 02</a>
+            <a href="game-03.html" data-nav="game-03">Game 03</a>
+            <a href="game-04.html" data-nav="game-04">Game 04</a>
+            <a href="game-05.html" data-nav="game-05">Game 05</a>
+          </nav>
+        </div>
+      </header>
+
+      <main class="inner-page">
+        <section class="page-hero">
+          <div class="container page-hero-grid">
+            <div>
+              <p class="eyebrow accent-gold">Node 05 // live jackpot defense</p>
+              <h1 class="page-title">Jackpot Bastion</h1>
+              <p class="hero-text">
+                Roll for towers, plant fungal engines in the deep caverns, and guide a lone delver through the underdark while the vault holds against corrupted raiders.
+              </p>
+              <div class="hero-actions">
+                <a class="button button-primary" href="#tower-stage">Jump To Defense</a>
+                <a class="button button-outline" href="index.html">Return Home</a>
+              </div>
+            </div>
+            <aside class="panel detail-panel">
+              <p class="card-tag accent-gold">Run brief</p>
+              <h2>Roll a tower. Claim a cavern node. Guide the delver.</h2>
+              <p>
+                Spend spins to gamble for stronger towers, use chips to seed and upgrade them, then move your cave-runner with `WASD` or the arrow keys while the lane tries to crack the vault.
+              </p>
+            </aside>
+          </div>
+        </section>
+
+        <section class="content-section">
+          <div class="container game-layout alt-layout">
+            <article class="panel game-stage tower-panel wide-stage" id="tower-stage">
+              <div class="tower-hud">
+                <div>
+                  <p class="stage-label">Vault director</p>
+                  <p class="snake-status" data-tower-status>Roll your first tower, place it on a cavern node, and move the delver with WASD or arrow keys.</p>
+                </div>
+                <div class="score-row">
+                  <div class="score-box">
+                    <span>Wave</span>
+                    <strong data-tower-wave>0</strong>
+                  </div>
+                  <div class="score-box">
+                    <span>Chips</span>
+                    <strong data-tower-money>220</strong>
+                  </div>
+                  <div class="score-box">
+                    <span>Spins</span>
+                    <strong data-tower-rolls>5</strong>
+                  </div>
+                  <div class="score-box">
+                    <span>Core</span>
+                    <strong data-tower-lives>20</strong>
+                  </div>
+                  <div class="score-box">
+                    <span>Delver</span>
+                    <strong data-tower-player>100</strong>
+                  </div>
+                </div>
+              </div>
+              <div class="stage-screen tower-screen">
+                <canvas
+                  class="tower-canvas"
+                  data-tower-canvas
+                  width="960"
+                  height="540"
+                  aria-label="Jackpot Bastion tower defense board"
+                ></canvas>
+              </div>
+            </article>
+
+            <aside class="tower-sidebar">
+              <article class="panel tower-roll-card">
+                <p class="card-tag accent-gold">Roll station</p>
+                <div class="tower-roll-preview">
+                  <span>Current blueprint</span>
+                  <strong data-tower-roll-name>Empty rack</strong>
+                  <p data-tower-roll-copy>Spend a spin to pull your next tower card.</p>
+                  <p class="tower-roll-meta" data-tower-roll-meta>Rarity: none // Cost: --</p>
+                </div>
+                <div class="tower-roll-actions">
+                  <button class="button button-primary" type="button" data-tower-roll>Roll Tower</button>
+                  <button class="button button-outline" type="button" data-tower-roll-barrier>Roll Barrier</button>
+                  <button class="button button-secondary" type="button" data-tower-start>Start Wave</button>
+                  <button class="button button-outline" type="button" data-tower-auto>Auto: Off</button>
+                  <button class="button button-outline" type="button" data-tower-pause>Pause</button>
+                  <button class="button button-outline" type="button" data-tower-speed>Speed: 1x</button>
+                  <button class="button button-outline" type="button" data-tower-sell>Sell Tower</button>
+                  <button class="button button-outline" type="button" data-tower-reset>Reset Run</button>
+                </div>
+              </article>
+
+              <article class="panel tower-upgrade-card">
+                <p class="card-tag accent-cyan">Tower ops</p>
+                <div>
+                  <span>Selected pad</span>
+                  <strong data-tower-selected-name>No tower selected</strong>
+                  <p data-tower-selected-copy>Click a placed tower to inspect it, upgrade it, or cash it out. Move the delver to pressure the lane.</p>
+                </div>
+                <div class="tower-upgrade-grid">
+                  <article>
+                    <span>Upgrade</span>
+                    <strong data-tower-upgrade-cost>--</strong>
+                    <p>Increase damage, range, and fire rate.</p>
+                  </article>
+                  <article>
+                    <span>Sell return</span>
+                    <strong data-tower-sell-value>--</strong>
+                    <p>Recover part of the chips tied up in the slot.</p>
+                  </article>
+                </div>
+                <div class="tower-upgrade-actions">
+                  <button class="button button-secondary" type="button" data-tower-upgrade>Upgrade</button>
+                </div>
+              </article>
+
+              <article class="panel tower-log-card">
+                <p class="card-tag accent-pink">Defense log</p>
+                <div class="tower-log" data-tower-log aria-live="polite"></div>
+              </article>
+            </aside>
+          </div>
+        </section>
+      </main>
+
+      <footer class="site-footer">
+        <div class="container footer-frame">
+          <p>Neon Arcade Grid // session year <span data-year></span></p>
+          <p>Game node 05 online.</p>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>
